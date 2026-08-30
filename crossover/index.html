@@ -1,0 +1,1226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noai, noimageai">
+<title>The Enrichment Crossover Effect: Context Granularity and Knowledge Enrichment in Geospatial Prediction</title>
+<style>
+/* ---------- Economist-adjacent reading theme, light ground ---------- */
+  :root{
+    --paper:#f0eee6;        /* page — ivory */
+    --panel:#e8e6dc;        /* chart panel — ivory dark */
+    --card:#faf9f5;         /* chips, inputs — ivory light */
+    --ink:#1f1e1d;          /* slate dark */
+    --ink-2:#3d3d3a;
+    --ink-3:#5e5d59;
+    --rule:#d1cfc5;         /* cloud light */
+    --red:#d14424;          /* the one series that matters */
+    --ok:#1e6f3e;
+    --map-fade:#ddd9cc;
+    --map-line:#d1cfc5;
+    --map-miss:rgba(209,68,36,0.45);
+    --grey-bar:#b0aea5;
+    --serif:'Newsreader',Georgia,'Iowan Old Style',serif;
+    --display:'Fraunces',Georgia,'Times New Roman',serif;
+    --sans:'Space Grotesk',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;
+  }
+  :root[data-theme="dark"]{--paper:#1f1e1d;--panel:#292824;--card:#262521;--ink:#f0eee6;--ink-2:#d5d2c8;--ink-3:#b0aea5;--rule:#454440;--red:#e0562f;--ok:#83b892;--map-fade:#31302b;--map-line:#3d3c37;--map-miss:rgba(224,86,47,0.5);--grey-bar:#5e5d59}
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--paper:#1f1e1d;--panel:#292824;--card:#262521;--ink:#f0eee6;--ink-2:#d5d2c8;--ink-3:#b0aea5;--rule:#454440;--red:#e0562f;--ok:#83b892;--map-fade:#31302b;--map-line:#3d3c37;--map-miss:rgba(224,86,47,0.5);--grey-bar:#5e5d59} }
+  :root[data-theme="dark"] .artefact img{filter:brightness(.85)}
+  *{box-sizing:border-box}
+  html{background:var(--paper);transition:background .25s linear}
+  body{margin:0;color:var(--ink);transition:color .25s linear,background .25s linear;font-family:var(--serif);font-size:20px;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .wrap{max-width:920px;margin:0 auto;padding:0 24px}
+
+  header.mast{padding:2.6rem 0 0}
+  header.mast .wrap::after{content:"";display:block;width:100%;height:1px;background:var(--rule);margin:1.6rem 0 0}
+  header.mast+*{margin-top:1rem}
+  h1{font-family:var(--display);font-size:clamp(22px,3.9vw,39px);line-height:1.08;margin:0 0 .6rem;font-weight:600;letter-spacing:-.5px;white-space:nowrap}
+  .sub{font-size:22px;line-height:1.45;color:var(--ink-2);margin:0 0 1.1rem;font-style:italic}
+
+
+  /* ---------- theme toggle, in line with the title ---------- */
+  .mastrow{display:flex;align-items:center;justify-content:space-between;gap:1.2rem}
+  .tgl{flex:none;position:relative;width:32px;height:16px;border-radius:2rem;border:1px solid var(--ink-3);background:var(--card);cursor:pointer;padding:0;opacity:.55;transition:opacity .2s}
+  .tgl:hover{opacity:1}
+  .tgl .knob{position:absolute;top:2px;left:2.5px;width:10px;height:10px;border-radius:50%;background:var(--ink-3);transition:transform .25s ease}
+  :root[data-theme="dark"] .tgl .knob{transform:translateX(16px)}
+
+  article{padding:1rem 0 1rem}
+  article p{margin:0 0 1.05rem}
+  article p.tk{color:#8a6d1a;background:#fdf6df;border-left:3px solid #e5c552;padding:.55rem .8rem;font-size:16px;font-family:var(--sans);line-height:1.5}
+  article p.tk b{letter-spacing:.06em}
+  .drop::first-letter{float:left;font-size:56px;line-height:.86;padding:4px 8px 0 0;font-weight:700}
+  .seechart{color:var(--ink-3)}
+
+  /* ---------- figures ---------- */
+  figure.econ{margin:2.4rem 0;background:transparent;padding:0;border:0}
+  figure.econ .tab{display:none}
+  figure.econ h3{font-family:var(--display);font-size:20px;font-weight:600;margin:0 0 .15rem;color:var(--ink);letter-spacing:-.2px}
+  figure.econ .unit{font-family:var(--serif);font-size:16px;font-style:italic;color:var(--ink-2);margin:0 0 .9rem;line-height:1.45}
+  figure.econ figcaption{font-family:var(--serif);font-size:16px;color:var(--ink-2);margin-top:.8rem;line-height:1.55}
+  figure.econ figcaption b{color:var(--ink)}
+  figure.econ svg text{font-family:var(--sans)}
+  .pending{border:1.5px dashed var(--rule);background:repeating-linear-gradient(45deg,transparent,transparent 14px,#f0eee7 14px,#f0eee7 15px)}
+  .pending .scaffold{height:170px;display:flex;align-items:center;justify-content:center;font-family:var(--sans);font-size:13px;color:var(--ink-3);letter-spacing:.04em;text-transform:uppercase}
+
+  /* matrix */
+  table.matrix{width:100%;border-collapse:collapse;font-family:var(--sans);font-size:13.5px}
+  table.matrix th{ text-align:left;font-weight:600;color:var(--ink-3);font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;padding:.45rem .5rem;border-bottom:1.5px solid var(--ink)}
+  table.matrix td{padding:.5rem .5rem;border-bottom:1px solid var(--rule);vertical-align:top;line-height:1.4}
+  table.matrix td.q{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:var(--ink-2);white-space:nowrap}
+  .ok{color:var(--ok);font-weight:600}
+  .bad{color:var(--red);font-weight:600}
+  .mute{color:var(--ink-3)}
+  .pendcell{color:#8a6d1a;font-style:italic}
+
+  /* slider figure */
+  .swipe{position:relative;user-select:none;touch-action:none}
+  .swipe .labels{display:flex;justify-content:space-between;font-family:var(--sans);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:.4rem}
+  .swipe .labels .active{color:var(--ink);font-weight:700}
+  .handleHint{font-family:var(--sans);font-size:11.5px;color:var(--ink-3);text-align:center;margin-top:.45rem}
+
+  .rulehr{border:0;border-top:1px solid var(--rule);margin:2.2rem 0}
+  .tombstone{color:var(--ink);font-size:18px}
+
+  footer.colophon{border-top:2px solid var(--ink);margin:2.5rem 0 0;padding:1.1rem 0 3rem;font-family:var(--sans);font-size:13px;color:var(--ink-2);line-height:1.6}
+  footer.colophon h4{font-size:11.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-3);margin:0 0 .5rem}
+  footer.colophon ul{margin:.3rem 0 .9rem;padding-left:1.1rem}
+  footer.colophon ol.fnl{margin:.3rem 0 .9rem;padding-left:1.5rem}
+  footer.colophon ol.fnl li{margin-bottom:.35rem}
+  footer.colophon ol.fnl code{font-size:11px}
+  footer.colophon ol.fnl a{color:var(--ink-2)}
+  footer.colophon li{margin-bottom:.25rem}
+
+  @media print{
+    body{font-size:11pt}
+    figure.econ{break-inside:avoid}
+  }
+  @media (max-width:560px){ h1{font-size:27px;white-space:normal} }
+  /* ---------- the machine (stack stepper) ---------- */
+  .machine .inrow{display:flex;gap:.6rem;margin-bottom:.7rem}
+  .machine input[type=text]{flex:1;font-family:ui-monospace,Menlo,monospace;font-size:14px;padding:.55rem .7rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:0}
+  .machine input[type=text]:focus{outline:2px solid var(--red);outline-offset:-1px}
+  .machine button{font-family:var(--sans);font-size:13.5px;font-weight:700;background:var(--ink);color:var(--paper);border:0;padding:.55rem 1.1rem;cursor:pointer}
+  .machine button:hover{background:var(--red)}
+  .sugg{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem}
+  .sugg button{background:var(--paper);color:var(--ink-2);border:1px solid var(--rule);font-weight:400;font-family:ui-monospace,Menlo,monospace;font-size:11.5px;padding:.3rem .55rem}
+  .sugg button:hover{border-color:var(--ink);color:var(--ink);background:var(--paper)}
+  .stages{display:grid;gap:.55rem}
+  .stage{border:1px solid var(--rule);background:var(--card);padding:.6rem .8rem;opacity:.38;transform:translateY(4px);transition:opacity .45s ease,transform .45s ease}
+  .stage.on{opacity:1;transform:none}
+  .stage h4{margin:0 0 .3rem;font-family:var(--sans);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+  .stage h4 b{color:var(--ink)}
+  .stage .out{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;line-height:1.75;color:var(--ink)}
+  .stage .note{font-family:var(--sans);font-size:12px;color:var(--ink-3);margin-top:.25rem;line-height:1.45}
+  .tok{display:inline-block;border:1px solid var(--rule);padding:0 .35rem;margin:0 .15rem .15rem 0;background:var(--panel)}
+  .tok em{font-style:normal;font-size:9.5px;color:var(--ink-3);letter-spacing:.05em;display:block;line-height:1;padding-top:2px}
+  .tok.hit{border-color:var(--ok)}
+  .tok.miss{border-color:var(--red);color:var(--red)}
+  .zap{color:var(--red);font-weight:700}
+  .erow{display:flex;gap:.6rem;align-items:baseline;flex-wrap:wrap}
+  .erow b{font-family:var(--sans);font-size:12px;min-width:88px}
+  .ladder{display:flex;gap:1rem;flex-wrap:wrap}
+  .rung{font-family:var(--sans);font-size:12px;color:var(--ink-3);border-left:3px solid var(--rule);padding-left:.5rem}
+  .rung b{display:block;color:var(--ink);font-size:11px;letter-spacing:.07em;text-transform:uppercase}
+  .rung.hot{border-left-color:var(--red)}
+  /* ---------- test card ---------- */
+  .chips{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.75rem}
+  .chips button{font-family:var(--sans);font-size:12.5px;padding:.4rem .7rem;border:1.5px solid var(--rule);background:var(--card);color:var(--ink-2);cursor:pointer}
+  .chips button.sel{border-color:var(--ink);color:var(--ink);font-weight:700;background:var(--paper)}
+  .mapbox{position:relative;background:var(--panel);border:1px solid var(--rule)}
+  .mapbox svg{display:block;width:100%}
+  .caselede{font-family:var(--sans);font-size:13px;color:var(--ink-2);line-height:1.5;margin:.6rem 0 .55rem}
+  table.score{width:100%;border-collapse:collapse;font-family:var(--sans);font-size:12.5px}
+  table.score th{text-align:left;font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);border-bottom:1.5px solid var(--ink);padding:.3rem .4rem}
+  table.score td{border-bottom:1px solid var(--rule);padding:.38rem .4rem}
+  .dragbar{font-family:var(--sans);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);display:flex;justify-content:space-between;margin:.45rem 0 .2rem}
+  .dragbar .active{color:var(--ink);font-weight:700}
+  /* three machines strip */
+  .threemachines{margin-top:1.1rem;border-top:1.5px solid var(--ink);padding-top:.8rem}
+  .tmtitle{margin:0 0 .6rem;font-family:var(--sans);font-size:13px;font-weight:700;color:var(--ink)}
+  .tmgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.7rem}
+  @media (max-width:640px){.tmgrid{grid-template-columns:1fr}}
+  .tm{background:var(--card);border:1px solid var(--rule);padding:.55rem .7rem}
+  .tm h5{margin:0 0 .35rem;font-family:var(--sans);font-size:12px;font-weight:700;color:var(--ink)}
+  .tm ol{margin:0;padding-left:1.05rem;font-family:var(--sans);font-size:11.5px;line-height:1.5;color:var(--ink-2)}
+  .tm ol b{color:var(--ink)}
+  .tm ol i{color:var(--ink-3)}
+  .tmnote{margin:.55rem 0 0;font-family:var(--sans);font-size:11px;color:var(--ink-3)}
+
+  .cpSection{--grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .cpSection::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:var(--grain);opacity:.05;mix-blend-mode:multiply;z-index:4}
+  :root[data-theme="dark"] .cpSection::before{opacity:0}
+  #pipeSvg{width:100%;height:100%}
+  @media (max-width:760px){
+  }
+  /* ---- scroll-driven centerpiece (full-bleed) ---- */  /* ---- scroll-driven centerpiece (full-bleed) ---- */  /* ---- scroll-driven centerpiece (full-bleed) ---- */
+  .cpSection{position:relative;width:100vw;margin-left:calc(50% - 50vw);height:500vh}
+  .cpSticky{position:sticky;top:0;height:100vh;display:flex;align-items:stretch;box-sizing:border-box;padding:0 clamp(20px,4vw,72px);gap:clamp(16px,3vw,56px)}
+  .cpMap{flex:1 1 auto;position:relative;min-width:0}
+  #cpCanvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .cpAside{flex:0 0 clamp(320px,29vw,480px);display:flex;flex-direction:column;justify-content:center;gap:.55rem;font-family:var(--sans)}
+  .cpState{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+  .cpNum{line-height:1;margin-top:.35rem}
+  .cpBig{font-family:var(--display);font-size:clamp(56px,6.6vw,96px);font-weight:600;letter-spacing:-3px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1;display:block;transition:opacity .3s ease}
+  .cpBig.counting{opacity:.32}
+  .cpBigCap{font-size:14px;color:var(--ink-3);display:block;margin-top:.55rem}
+  .cpHed{margin-bottom:1.15rem;max-width:40ch}
+  .cpKicker{display:block;font-family:var(--sans);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:.5rem}
+  .cpLede{font-family:var(--serif);font-size:clamp(16px,1.25vw,19px);line-height:1.5;color:var(--ink-2);margin:0}
+  .cpLede b{color:var(--ink);font-weight:600}
+  .cpStepText{font-family:var(--serif);font-size:clamp(16px,1.25vw,19px);font-weight:400;line-height:1.55;color:var(--ink-2);margin:.7rem 0 .2rem;min-height:4.4em}
+  .cpStepText b{color:var(--ink);font-weight:500}
+  .cpEngRow{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.2rem}
+  .eng-chip{font-family:var(--sans);font-size:13.5px;font-weight:600;padding:.5rem 1.15rem;border-radius:100px;border:1.5px solid var(--rule);background:var(--card);color:var(--ink-2);cursor:pointer;transition:background .2s,color .2s,border-color .2s,box-shadow .2s}
+  .eng-chip:hover{border-color:var(--ink);color:var(--ink)}
+  .eng-chip.sel{background:var(--ink);color:var(--paper);border-color:var(--ink);box-shadow:0 2px 12px rgba(20,20,20,.18)}
+  .cpEngPick{margin-bottom:1.2rem}
+  .cpEngLbl,.cpAddrLbl{display:block;font-family:var(--sans);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:.5rem}
+  .cpEngRow{display:flex;gap:.5rem;flex-wrap:wrap}
+  .cpAddrWrap{margin-bottom:1rem}
+  .cpAddr{display:flex;flex-wrap:wrap;gap:.35rem;font-family:ui-monospace,Menlo,monospace;transition:opacity .28s ease}
+  .cpAddr .ac{border:1.5px solid var(--rule);border-radius:5px;padding:.24rem .6rem;background:var(--card);font-size:15px;color:var(--ink);transition:all .3s}
+  .cpAddr .ac.new{border-color:var(--red);color:var(--red);background:color-mix(in srgb, var(--red) 8%, var(--card))}
+  .cpAddr .ac.chg{border-color:var(--red);color:var(--red);background:color-mix(in srgb, var(--red) 8%, var(--card))}
+  .cpAddr .ac .cut{text-decoration:line-through;text-decoration-color:var(--red);opacity:.5}
+  .cpHint{display:block;font-family:var(--sans);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:.5rem}
+  @media (max-width:760px){
+    .cpSection{height:430vh}
+    .cpSticky{flex-direction:column;padding:1.5vh 6vw 3vh;gap:0}
+    .cpMap{flex:1 1 auto}
+    .cpAside{flex:0 0 auto;justify-content:flex-start;gap:.4rem}
+    .cpStepText{min-height:5.5em;font-size:15px}
+    .cpBig{font-size:44px}
+  }
+  /* fig5 address field */  /* fig5 address field */
+  .f5loc svg{display:block;margin-bottom:.5rem}
+  .chips button.dim{opacity:.35;pointer-events:none}
+  #f5Field svg{display:block;width:100%}
+  .cpnum{font-family:var(--sans);margin:.35rem 0 .1rem;display:flex;align-items:baseline;gap:.5rem}
+  .cpnum .big{font-size:40px;font-weight:700;letter-spacing:-1px;line-height:1}
+  .cpnum #cpBigCap{font-size:13px;color:var(--ink-3)}
+  #cpState{font-family:var(--sans);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin:.2rem 0 .5rem}
+  #f5Details{margin:.4rem 0 0}
+  #f5Details summary{font-family:var(--sans);font-size:12.5px;color:var(--ink-3);cursor:pointer;padding:.3rem 0}
+  #f5Details summary:hover{color:var(--ink)}
+  #f5Details[open] summary{color:var(--ink);font-weight:600}
+  .printgrid{display:none}
+  /* motion */
+  @keyframes pinIn{from{opacity:0;transform:scale(.15)}to{opacity:1;transform:scale(1)}}
+  .mapbox svg .pin{transform-box:fill-box;transform-origin:center;animation:pinIn .55s cubic-bezier(.2,1.4,.4,1) backwards}
+  .mapbox{transition:opacity .3s ease}
+  @keyframes rowIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+  table.score tbody tr{animation:rowIn .4s ease backwards}
+  .stage.cur{border-left:3px solid var(--red)}
+  @media (prefers-reduced-motion: reduce){
+    .mapbox svg .pin, table.score tbody tr{animation:none!important}
+    .stage{transition:none!important}
+  }
+  @media print{
+    .machine .inrow,.sugg,.chips,.dragbar,.handleHint{display:none}
+    .printgrid{display:grid;grid-template-columns:1fr 1fr;gap:8pt}
+  }
+
+  .artefact{width:min(86vw,900px);margin:2.4rem 0 2.4rem calc(50% - min(43vw,450px))}
+  .artefact img{width:100%;display:block;border:1px solid var(--rule)}
+  .artefact figcaption{font-family:var(--serif);font-style:italic;font-size:12.5px;color:var(--ink-3);margin-top:.6rem;line-height:1.55}
+
+  sup.fn{font-family:var(--sans);font-size:9px;line-height:0;vertical-align:super}
+  sup.fn a{color:var(--ink);text-decoration:none}
+  sup.fn a::before{content:"["}
+  sup.fn a::after{content:"]"}
+  .footnotes{margin-top:3.2rem}
+  .footnotes::before{content:"";display:block;width:230px;height:1px;background:var(--rule);margin-bottom:1.1rem}
+  .footnotes ol{margin:0;padding-left:1.2rem}
+  .footnotes li{font-family:var(--serif);font-size:13.5px;color:var(--ink-2);line-height:1.6}
+  .footnotes a{color:var(--ink-2)}
+  .fnback{text-decoration:none;margin-left:.25rem}
+
+  .artefact--plate{width:min(56vw,300px);margin-left:calc(50% - min(28vw,150px))}
+
+</style>
+<style>
+/* ---------- paper page (crossover/): additions on top of base.css ---------- */
+header.mast h1{white-space:normal}
+
+article h2{font-family:var(--display);font-size:28px;font-weight:600;letter-spacing:-.3px;line-height:1.15;margin:2.8rem 0 .9rem}
+article h2:first-child{margin-top:1.2rem}
+article h3{font-family:var(--display);font-size:22px;font-weight:600;letter-spacing:-.2px;line-height:1.2;margin:2.1rem 0 .65rem}
+article h4{font-family:var(--sans);font-size:12.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);margin:1.8rem 0 .55rem}
+
+article ul{margin:0 0 1.05rem;padding-left:1.35rem}
+article li{margin-bottom:.35rem}
+article code{font-family:ui-monospace,Menlo,monospace;font-size:.82em;background:var(--card);border:1px solid var(--rule);padding:0 .25em}
+
+.tablewrap{overflow-x:auto;margin:1.5rem 0;border-bottom:1px solid var(--rule)}
+.tablewrap table.matrix{min-width:560px}
+.tablewrap table.matrix td{font-variant-numeric:tabular-nums;white-space:nowrap}
+.tablewrap table.matrix td:first-child,.tablewrap table.matrix th:first-child{padding-left:0}
+
+pre.codeblock{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;line-height:1.65;color:var(--ink);background:var(--card);border:1px solid var(--rule);padding:.9rem 1.1rem;overflow-x:auto;margin:0 0 1.05rem}
+
+figure.figpaper{margin:2.2rem 0;padding:0;border:0}
+figure.figpaper img{width:100%;display:block;border:1px solid var(--rule);background:#fff}
+:root[data-theme="dark"] figure.figpaper img{filter:brightness(.85)}
+figure.figpaper figcaption{font-family:var(--serif);font-style:italic;font-size:13.5px;color:var(--ink-3);margin-top:.6rem;line-height:1.55}
+figure.figpaper figcaption code{font-style:normal;font-size:11.5px}
+.pairgrid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;align-items:start}
+@media (max-width:640px){.pairgrid{grid-template-columns:1fr}}
+.subcap{font-family:var(--sans);font-size:11.5px;letter-spacing:.05em;color:var(--ink-3);margin:.4rem 0 0;text-align:center}
+figure.figpaper.wide{width:min(94vw,1240px);margin-left:calc(50% - min(47vw,620px))}
+figure.figpaper.wide figcaption{max-width:920px;margin-left:auto;margin-right:auto;padding:0 24px}
+
+footer.colophon h4{margin-top:1.4rem}
+footer.colophon h4:first-child{margin-top:0}
+footer.colophon pre.codeblock{font-size:11.5px;margin:.4rem 0 .9rem}
+footer.colophon ul{margin:.3rem 0 .9rem;padding-left:1.1rem}
+
+</style>
+</head>
+<body>
+
+<script>(function(){try{var q=new URLSearchParams(location.search).get("theme");var t=q||localStorage.getItem("naksha-theme");if(!t)t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t;}catch(e){}})();</script>
+<header class="mast"><div class="wrap">
+  <div class="mastrow">
+    <h1>The Enrichment Crossover Effect</h1>
+    <button id="themeToggle" class="tgl" aria-label="Toggle dark mode"><span class="knob"></span></button>
+  </div>
+  <p class="sub">Context Granularity and Knowledge Enrichment in Geospatial Prediction</p>
+</div></header>
+
+<article><div class="wrap">
+
+<h2>2. Names</h2>
+
+<p>Shantanu Kumar (Yale University, MBA + MS Computer Science).</p>
+
+<p>This report is submitted as the individual final project for CPSC 381/581 (Machine Learning, Spring 2026, Instructor: Prof. Alex Wong). The underlying research was carried out under Prof. Timos Antonopoulos at Yale and Prof. Rex Ying's Graph and Geometric Learning Lab; an academic version of this work is being prepared for submission to ACL. All code, experiments, ablations, and analyses described in this report were implemented and run by me.</p>
+
+<h2>3. Introduction</h2>
+
+<h3>3.1 Problem Statement</h3>
+
+<p class="drop">Location data underpins a growing range of applications, from point-of-interest recommendation and friend suggestion to urban planning and epidemic modeling. Traditional approaches rely on handcrafted features extracted from check-in logs, review histories, and social graphs, fed to gradient-boosted trees or neural networks. More recently, large language models (LLMs) have been applied to geospatial tasks by converting structured location data into natural-language prompts. However, a fundamental question remains underexplored: how should spatial context be structured for these models, and when does adding more context, or richer context, help versus hurt?</p>
+
+<p>The specific learning problem this project addresses has three coordinated parts:</p>
+
+<p>1. Binary classification: given two users' mobility traces, predict whether they are friends (Gowalla friendship prediction). 2. Pointwise ranking: given a user's history (or a pickup zone), rank a candidate set of next venues (Gowalla next-location, NYC Taxi next-dropoff). 3. Regression: given pickup, dropoff, and time features, predict trip duration in minutes (NYC Taxi).</p>
+
+<p>A fourth, motivational pair of tasks on Yelp (star rating regression and next-business ranking) is included as context for what LLMs can do when data is already semantically rich.</p>
+
+<p>Across all of these tasks, the research question I formulate as a learning problem is:</p>
+
+<p>Given a target task and a learner f, does enriching the input representation with external semantic categories (Overture Maps place categories appended to coordinates and identifiers) improve the test loss of f, and how does this change as the input representation grows from aggregate statistics to full spatiotemporal context?</p>
+
+<h3>3.2 Motivation</h3>
+
+<p>Most real-world geospatial datasets are sparse: check-in logs contain only user IDs, timestamps, and coordinates, with no venue descriptions or category labels; taxi trip records contain only pickup/dropoff zones and timestamps. Services like the Overture Maps Foundation provide open place data with category labels (restaurant, park, gym) linked to geographic coordinates. By reverse-geocoding sparse locations against Overture Maps, we can enrich the data with semantic categories. The natural hypothesis is that enrichment should help. The central finding of this project is that this hypothesis is only conditionally correct: enrichment helps at low context granularity but can hurt at high granularity, and the strength of this enrichment crossover effect depends on how semantically opaque the base data is.</p>
+
+<p>Two practical motivations make this question worth a course-scale empirical study:</p>
+
+<p>1. Practitioners increasingly attach category enrichment to sparse mobility data without measuring whether it actually helps. If enrichment adds bytes of context without adding signal, it is wasted compute (especially under LLMs that pay per token). Documenting when enrichment hurts gives practitioners a diagnostic.</p>
+
+<p>2. The "more context is better" assumption from prior LLM-for-geospatial work (notably GeoLLM) was tested at one low-granularity operating point. Sweeping across five granularity levels and three representation tiers exposes an interaction that single-point ablations cannot.</p>
+
+<h3>3.3 Approach Overview</h3>
+
+<p>The methodology has four pillars:</p>
+
+<p>1. Datasets. Three datasets are used: Gowalla check-ins (sparse, externally enriched), NYC Taxi 2024 (structured zone-level), and Yelp (natively rich). Two are sparse and need external enrichment; one is natively rich and provides motivational context.</p>
+
+<p>2. Granularity ladder (G0 to G4). Five context depth levels are defined, from aggregate statistics only (G0) up to full spatiotemporal patterns including temporal co-occurrence (G4). Each level strictly adds features on top of the previous level, so the ladder is monotonic.</p>
+
+<p>3. Representation tiers. Three representation tiers are evaluated: latlng (raw coordinates only), venue_id / zone_id (raw IDs plus coordinates), and enriched (IDs plus coordinates plus Overture Maps place categories). Tiers are designed so that pairwise differences isolate the effect of the representation type.</p>
+
+<p>4. Models and learning paradigms. Feature-based ML (LightGBM and MLP), zero-shot OpenAI models (gpt-4o-mini, gpt-4o, gpt-4.1, gpt-5-mini, gpt-5-nano), and Llama 3.1 8B Instruct in both zero-shot and QLoRA fine-tuned configurations. Five complementary analyses (SHAP, ablation, feature redundancy, UMAP, prediction disagreement) explain the crossover mechanism.</p>
+
+<h3>3.4 Challenges Faced</h3>
+
+<p>1. Asymmetric model coverage under cost. Full-factorial fine-tuning across all OpenAI models would have required 75 plus paid fine-tuning runs. Resolving this required restricting fine-tuning experiments to Llama 3.1 8B (run on Yale's Bouchet HPC under QLoRA, rank 16) plus a small bridging set of OpenAI fine-tunes on two models with 200 training pairs.</p>
+
+<p>2. Enrichment match noise. Gowalla data is from 2010 to 2011, while the Overture Maps places snapshot is from 2026-02-18. Roughly 15 years separate the two, so categorical drift is real. The 80 percent coverage filter (only keep users where 80 percent or more of their visited locations match an Overture place within 50m) and a coarse category granularity (109 distinct types) absorb most of the noise. The remaining noise is documented as a limitation.</p>
+
+<p>3. Avoiding leakage. Train and test user pools are disjoint. Venue popularity is computed exclusively from training users to prevent leakage. Temporal splits (Jan-Sep train, Oct-Dec test for NYC Taxi) preserve causal direction.</p>
+
+<p>4. Ranking versus classification mismatch. Llama fine-tuning on pointwise binary labels did not transfer to listwise ranking quality on Gowalla next-location. This was discovered empirically (FT did not beat ZS at G4) and is reported honestly rather than papered over.</p>
+
+<p>5. Spatial scale heterogeneity. Gowalla operates at point level (50m match radius), while NYC Taxi zones are polygons (median equivalent radius of about 825 m). The 1 km radius used for taxi enrichment is documented as a polygon-containment approximation rather than the cleanest spatial join.</p>
+
+<h3>3.5 Research Questions and Contributions</h3>
+
+<p>I investigate four research questions:</p>
+
+<ul><li>RQ1. How does increasing geospatial context depth (G0 to G4) affect model performance on geospatial tasks?</li><li>RQ2. Under what conditions does external knowledge enrichment improve prediction quality, and how does this depend on context depth and base data informativeness?</li><li>RQ3. How do different spatial data representations (raw coordinates, venue/zone identifiers, enriched categories) compare at varying context depths?</li><li>RQ4. How does fine-tuning interact with enrichment and granularity for LLM-based geospatial prediction?</li></ul>
+
+<p>The main contributions, summarized for a ML course audience, are:</p>
+
+<p>1. A systematic empirical study of how five context depth levels (G0 to G4) and three data representation tiers interact across four geospatial prediction tasks on two sparse datasets, evaluated with both feature-based models and LLMs. 2. Discovery and empirical characterization of the enrichment crossover effect: enrichment improves performance at low granularity (plus 15 percentage points for fine-tuned Llama at G1) but degrades it at high granularity (minus 2.5 pp at G4), supported by five complementary analyses. 3. Identification of the boundary condition: the crossover is strongest when the base data is semantically opaque (Gowalla) but attenuated when spatial structure is already encoded (NYC taxi zones). Practical diagnostic: enrich when behavioral context is sparse, use raw identifiers when dense features are available. 4. Evidence that fine-tuning amplifies the crossover: zero-shot models produce zero enrichment delta on Gowalla friendship, while fine-tuning both creates and amplifies the effect. 5. An empirical tie between coordinate-based and zone-ID-based representations for Llama on NYC Taxi: identical metrics across G0 to G4 (zero-shot and fine-tuned, ranking and duration), while only the enriched tier shifts the metrics. Reported as model- and setting-specific evidence, not a universal law.</p>
+
+<h2>4. Data</h2>
+
+<h3>4.1 Datasets</h3>
+
+<p>This project uses three datasets that span the spectrum from semantically opaque (Gowalla) to natively rich (Yelp), with NYC Taxi as a structured intermediate.</p>
+
+<h4>4.1.1 Gowalla (sparse, externally enriched)</h4>
+
+<p>The SNAP Gowalla check-in dataset contains approximately 6.4M check-ins by 196K users at 1.3M unique locations, along with 950K undirected friendship edges. Each check-in records a user ID, timestamp, latitude, longitude, and location identifier. Crucially, no venue metadata is provided; locations are identified only by opaque IDs and coordinates, making this a prototypically sparse geospatial dataset.</p>
+
+<p>I apply two filters to ensure data quality. First, users must have at least 20 check-ins to provide sufficient behavioral history. Second, at least 80 percent of a user's visited locations must match an Overture Maps Foundation place record within 50 meters, ensuring that enrichment is reliable when applied. Users failing either filter are excluded from all experiments.</p>
+
+<h4>4.1.2 NYC Taxi (structured, zone-level)</h4>
+
+<p>I use the NYC Taxi and Limousine Commission Yellow Taxi trip records for 2024. Each trip records pickup and dropoff TLC taxi zones (263 zones after excluding zones 264 and 265, which represent unknown locations), timestamps, trip distance, and duration. Unlike Gowalla's opaque venue IDs, taxi zones carry inherent spatial structure: each zone belongs to a known borough with fixed geographic boundaries.</p>
+
+<p>The split is temporal: January through September 2024 is the training period, October through December is the test period. Trips are filtered to 1 to 120 minutes duration with positive distance. The temporal split means the test period (October to December) includes colder weather and holiday travel patterns not seen in training, providing a natural distribution shift test.</p>
+
+<h4>4.1.3 Yelp (natively rich)</h4>
+
+<p>I use the Yelp Open Dataset, which provides business reviews with rich native metadata including categories, star ratings, operating hours, and business attributes. Each review includes a user ID, business ID, star rating, date, and text. Unlike Gowalla, Yelp data is natively enriched: semantic metadata is built into the dataset, requiring no external knowledge base. Users with fewer than 20 reviews are excluded. Yelp serves as a motivational baseline: it shows what LLMs can achieve when data is already semantically rich, motivating the question of whether enrichment can replicate this for sparse datasets.</p>
+
+<h4>4.1.4 Dataset Statistics After Filtering</h4>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>Dataset</th><th>Entities</th><th>Locations / Zones</th><th>Records</th><th>Edges</th><th>Overture Match</th></tr></thead>
+<tbody><tr><td>Gowalla</td><td>60,562 users</td><td>1,228,397</td><td>6,120,444 check-ins</td><td>563,520</td><td>80 percent or more</td></tr>
+<tr><td>NYC Taxi</td><td>263 zones</td><td>263</td><td>about 36M trips</td><td>n/a</td><td>zone centroid</td></tr>
+<tr><td>Yelp</td><td>44,911 users</td><td>150,346</td><td>2,346,625 reviews</td><td>n/a</td><td>n/a (native)</td></tr></tbody>
+</table></div>
+
+<h3>4.2 External Knowledge Source: Overture Maps</h3>
+
+<p>For sparse datasets, I use the Overture Maps Foundation places layer, release 2026-02-18.0, as the external semantic source. Overture is an open, interoperable geospatial dataset aggregating place data from multiple sources. Each place has a primary category (one of 109 distinct category types in the matched set), a name, and a coordinate. The categories are the only Overture attribute used for enrichment in this project.</p>
+
+<h4>4.2.1 Enrichment Pipeline (Gowalla)</h4>
+
+<p>For each Gowalla location, I query the Overture places layer for the nearest place within a 50-meter radius. When a match is found, I extract its primary category (for example restaurant, park, gym), yielding 109 distinct category types across the matched set. This produces a category map covering the eligible user pool's check-in locations.</p>
+
+<p>The pipeline can be summarized as:</p>
+
+<pre class="codeblock">Gowalla check-ins (user, time, lat, lng, location_id)
+        |
+        +---- spatial join to Overture (nearest within 50 m) ----+
+                                                                  |
+                                                Category map: location_id to category (109 types)
+                                                                  |
+                                                Filter users (&gt;= 20 check-ins, &gt;= 80 percent match)
+                                                                  |
+                          +---------------- representation tiers ----------------+
+                          |                       |                              |
+                       latlng                 venue_id                       enriched
+                  (coords only)         (coords + IDs)              (coords + IDs + categories)</pre>
+
+<h4>4.2.2 Enrichment Pipeline (NYC Taxi)</h4>
+
+<p>For NYC Taxi, I compute zone centroids from the TLC zone shapefile and match each centroid against the same Overture places layer used for Gowalla, with a 1,000m radius (larger than Gowalla's 50m because zones span neighborhoods rather than individual venues). This yields the dominant nearby place categories for each zone. Three tiers parallel Gowalla: latlng (zone centroid coordinates), zone_id (TLC zone number, analogous to Gowalla's venue_id), and enriched (coordinates plus zone_id plus Overture categories).</p>
+
+<p>This is an approximation: zones are polygons rather than points, and a fixed 1km radius around the centroid will under-cover large zones (peripheral POIs are missed) and bleed into neighbors for small zones (median zone equivalent radius is about 825m, but 99 zones exceed 1km). I flag this as a known limitation and document its likely effect (attenuated crossover on enriched tier) rather than masking it.</p>
+
+<h3>4.3 Tasks</h3>
+
+<p>The five tasks supported by these datasets are:</p>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>Task</th><th>Type</th><th>Train size</th><th>Test size</th><th>Primary metric</th></tr></thead>
+<tbody><tr><td>Gowalla Friendship</td><td>Binary classification</td><td>20,000 pairs</td><td>200 LLM, 1,000 ML</td><td>Accuracy</td></tr>
+<tr><td>Gowalla Next-Location</td><td>Pointwise ranking, 20 cand.</td><td>1,000 users</td><td>200 users (4,000 pointwise)</td><td>MRR</td></tr>
+<tr><td>NYC Taxi Next-Dropoff Ranking</td><td>Pointwise ranking, 20 cand.</td><td>20,000 examples</td><td>132 origin queries</td><td>Acc@1, Acc@5, MRR</td></tr>
+<tr><td>NYC Taxi Trip Duration</td><td>Regression</td><td>50K (ML), 20K (Llama)</td><td>1,000 (ML), 200 (Llama)</td><td>MAE, RMSE</td></tr>
+<tr><td>Yelp Star Rating</td><td>Regression (1 to 5 stars)</td><td>20,000 pairs</td><td>100</td><td>MAE, exact, within-1</td></tr>
+<tr><td>Yelp Next-Business Ranking</td><td>Pointwise ranking, 20 cand.</td><td>20,000 pairs</td><td>100</td><td>Acc@1, Acc@5, MRR</td></tr></tbody>
+</table></div>
+
+<p>For Gowalla friendship, balanced datasets are constructed with equal numbers of positive (actual friends) and negative (random non-friend) pairs. The ML training set contains 20,000 pairs (10K positive, 10K negative), and the test set contains 1,000 pairs. For LLM evaluation, I use a 200-pair test set. Hard negative pairs (same-region non-friends who share geographic proximity but no friendship edge) are evaluated separately as a robustness probe.</p>
+
+<p>For Gowalla next-location, the ground-truth target is the user's chronologically last check-in; 19 negative candidates are sampled from the same or adjacent geographic regions to ensure geographic plausibility. The task is framed as pointwise binary classification (will this user visit this venue?), then candidates are ranked by predicted probability.</p>
+
+<p>For NYC Taxi next-dropoff, given a pickup zone, the task is to rank 20 candidate dropoff zones with the actual destination among them. 19 negatives are sampled from the same borough (or city-wide if needed). Format, training size, and metrics parallel Gowalla next-location.</p>
+
+<p>For NYC Taxi trip duration, the task is a continuous regression with metrics MAE and RMSE.</p>
+
+<p>The Yelp tasks use 100 test cases each and complete the picture of how granularity affects natively rich data.</p>
+
+<h2>5. Methodology</h2>
+
+<h3>5.1 Granularity Levels (G0 to G4)</h3>
+
+<p>I define five levels of context depth, semantically aligned across tasks. Each successive level adds features (for ML) or prompt content (for LLMs) on top of the previous level. The "+ Enriched" column denotes additional features available only in the enriched tier.</p>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>Level</th><th>Features (all tiers)</th><th>+ Enriched tier</th></tr></thead>
+<tbody><tr><td>G0</td><td>User aggregate stats (total check-ins, unique locations); candidate popularity</td><td>None; G0 is identical across tiers</td></tr>
+<tr><td>G1</td><td>+ Primary region, same-region flag, distance between centroids</td><td>+ Top user categories, candidate category known/in profile</td></tr>
+<tr><td>G2</td><td>+ Geo-spread, active days, co-visitation (exact or cell), visit count</td><td>+ Category entropy, category-level visit ratios</td></tr>
+<tr><td>G3</td><td>+ Recent trajectory (last 5 check-ins): min/avg/last distance to candidate</td><td>+ Recent same-category check-in count</td></tr>
+<tr><td>G4</td><td>+ Temporal patterns: visit hour mean/std, average hour at candidate</td><td>Same temporal features</td></tr></tbody>
+</table></div>
+
+<p>The granularity ladder is monotonic by construction: any G_k feature set is a strict superset of G_{k minus 1}.</p>
+
+<p>A direct visualization of how enrichment fits into the prompt, comparing G1 and G4 for the enriched tier on Gowalla friendship, shows that at G1 the category lines occupy roughly 40 percent of the prompt and are the dominant semantic signal, whereas at G4 the same category lines drop to roughly 15 percent of the prompt because behavioral features (trajectory, timing, co-visitation) crowd them out. This is a visual preview of why marginal information value differs between low and high granularity.</p>
+
+<h3>5.2 Representation Tiers</h3>
+
+<p>For Gowalla, I evaluate three data representation tiers that vary how location identity and co-visitation are computed:</p>
+
+<ul><li>latlng. Raw GPS coordinates only. Co-visitation is approximated via about 100m geo-cells. Popularity is cell-based.</li><li>venue_id. Gowalla location identifiers plus coordinates. Co-visitation uses exact venue ID matching. Popularity is venue-based.</li><li>enriched. All venue_id features plus Overture Maps place categories. Adds category-based features at G1+ (user category profiles, category entropy, category-level co-visitation ratios).</li></ul>
+
+<p>At G0, venue_id and enriched tiers are identical (no enrichment features are used). They diverge starting at G1. The latlng tier differs from venue_id even at G0 (cell-based vs. venue-based popularity).</p>
+
+<p>NYC Taxi uses the same three-tier structure with zone_id replacing venue_id. The key structural difference is that taxi zone IDs are arbitrary integers with no semantic content (unlike Gowalla venue IDs, which can carry implicit venue-level patterns through fine-tuning). Yelp has no tier distinction; its data is natively enriched.</p>
+
+<p>Crucially, latlng and venue_id tiers use the identical feature list and formulas; only the underlying notion of "place" changes. In the latlng tier, a place is a geo-cell, defined as the pair (round(lat, 3), round(lon, 3)), giving approximately 100m resolution. In the venue_id tier, a place is the Gowalla location_id, an opaque integer per venue. Two distinct POIs within one cell thus count as one place under latlng and two under venue_id.</p>
+
+<h3>5.3 Class of Functions and Objectives</h3>
+
+<p>I evaluate three families of learners.</p>
+
+<h4>5.3.1 Feature-based ML</h4>
+
+<p>LightGBM (gradient-boosted decision trees) is the primary feature-based model due to its robust handling of heterogeneous features, natural feature selection, and competitive accuracy on tabular data. The function class is an ensemble of regression trees:</p>
+
+<p>f(x) = sum over t in 1..T of f_t(x)</p>
+
+<p>where each f_t is a regression tree, and the ensemble is grown by gradient descent on a chosen loss. Concretely:</p>
+
+<ul><li>For binary classification (friendship), the objective is binary log-loss:</li></ul>
+
+<p>L(y, p) = -[ y log p + (1 - y) log(1 - p) ], with p = sigmoid(f(x)).</p>
+
+<ul><li>For pointwise ranking (Gowalla next-location, NYC next-dropoff), the same binary log-loss is used: each (user, candidate) pair is labeled 1 or 0, and predicted probabilities are used to rank candidates within a query.</li><li>For trip duration regression, the objective is mean squared error:</li></ul>
+
+<p>L(y, y_hat) = (y - y_hat)^2.</p>
+
+<p>Optimization in LightGBM is standard gradient boosting: at iteration t, fit a tree f_t to the negative gradient of the loss with respect to the current ensemble's prediction, then update with a learning-rate-scaled step.</p>
+
+<p>A 2-layer MLP (hidden sizes [64, 32], ReLU activations, dropout 0.3) is the secondary feature-based model, trained with Adam on the same loss functions. It is included to verify that the feature-based results are not LightGBM-specific.</p>
+
+<p>For Yelp, I additionally evaluate two augmentations of the feature-based pipeline:</p>
+
+<ul><li>Embedding-augmented LightGBM and MLP: OpenAI text-embedding-3-small (1536-dimensional) vectors of the prompt are concatenated with the handcrafted features.</li><li>Knowledge-Augmented Reasoning (KAR): an LLM is asked to generate a free-text rationale per example, which is then embedded and fed as a feature to LightGBM/MLP.</li></ul>
+
+<p>These provide a sanity check that simple feature-based pipelines can absorb LLM-derived signal without invoking a full LLM at inference.</p>
+
+<h4>5.3.2 Zero-shot LLMs</h4>
+
+<p>I evaluate five OpenAI models (gpt-4o-mini, gpt-4o, gpt-4.1, gpt-5-mini, gpt-5-nano) and Llama 3.1 8B Instruct in zero-shot mode. The function class is the language model itself, used as a black-box predictor. The prompt contains the user's profile and the candidate (or candidate pair), and the model is asked for a Yes/No (classification, ranking) or numeric (regression) answer.</p>
+
+<p>There is no objective being optimized at inference; the model uses pretrained weights only. Decoding uses temperature 0 (greedy) for OpenAI and greedy decoding for Llama, with max_tokens = 64. For reasoning-class models (gpt-5 family), the API uses max_completion_tokens with reasoning_effort instead of max_tokens with temperature.</p>
+
+<h4>5.3.3 Fine-tuned LLMs</h4>
+
+<p>For experiments requiring fine-tuning at scale, I use Llama 3.1 8B Instruct with QLoRA (rank 16, alpha 32) on 20,000 training examples per (granularity, tier) combination. The function class is still the language model, but with a low-rank adapter on top of frozen base weights. The objective is the standard next-token cross-entropy loss over the labeled answer span:</p>
+
+<p>L = - sum over t of log P(y_t | y_{&lt;t}, x)</p>
+
+<p>with x being the prompt and y the gold answer (Yes/No for classification/ranking, a numeric string for duration). Optimization uses AdamW via the unsloth library, with QLoRA's int4 quantization of the base model and full-precision adapters.</p>
+
+<p>Two OpenAI models (gpt-4o-mini, gpt-4.1-mini) are also fine-tuned via the OpenAI fine-tuning API on a smaller bridging set (200 training examples, enriched tier only, all 5 granularities) to verify that the Llama findings are not artifacts of one specific fine-tuning recipe.</p>
+
+<h3>5.4 Models Summary</h3>
+
+<p>Putting the three families together:</p>
+
+<ul><li>Feature-based: LightGBM (primary), MLP (2-layer, [64, 32], dropout 0.3, ReLU). Both trained per (granularity, tier).</li><li>Embedding/KAR feature-based (Yelp only): LightGBM and MLP with concatenated text-embedding-3-small features and KAR rationale embeddings.</li><li>OpenAI zero-shot: gpt-4o-mini, gpt-4o, gpt-4.1, gpt-5-mini, gpt-5-nano. Temperature 0 for non-reasoning models.</li><li>OpenAI few-shot (Gowalla friendship only): gpt-5-mini, gpt-5-nano with 2 examples in context.</li><li>OpenAI fine-tuned (Gowalla friendship only): gpt-4o-mini, gpt-4.1-mini, 200 training pairs, enriched tier.</li><li>Llama 3.1 8B Instruct zero-shot: greedy decoding, max_tokens 64.</li><li>Llama 3.1 8B Instruct fine-tuned: QLoRA r=16, alpha=32, 20,000 training examples per (granularity, tier) combination, run on Yale Bouchet HPC, max_seq_length 8,192.</li></ul>
+
+<p>In total, the Llama fine-tuning sweep consists of 5 granularities by 3 tiers by 2 datasets, yielding 30 fine-tuning runs. The OpenAI zero-shot sweep is 5 models by 5 granularities by 2 tiers (Gowalla) plus 5 models by 5 granularities (Yelp) plus 5 models by 5 granularities by 3 tiers (NYC Taxi).</p>
+
+<h2>6. Implementation Details</h2>
+
+<h3>6.1 Software Stack</h3>
+
+<ul><li>Python 3.10+, PyTorch (via unsloth) for Llama, scikit-learn for MLP and metrics, lightgbm for gradient boosting, pandas for data wrangling, DuckDB with the Overture S3 integration for spatial joins.</li><li>Llama fine-tuning runs on Yale Bouchet HPC with module load miniconda; conda activate llama_ft; module load CUDA/12.1.1.</li><li>Typical interactive allocation: salloc --partition=gpu_devel --time=06:00:00 --gpus=1 --mem=64G --cpus-per-task=4.</li><li>LLM API calls go through a CachedLLMClient that adds SHA-256 disk caching of (model, messages, temperature, max_tokens), exponential backoff (base 60s, up to 5 retries), and a 60s request timeout.</li></ul>
+
+<h3>6.2 Data Preprocessing</h3>
+
+<p>Gowalla:</p>
+
+<ul><li>min_user_checkins: 20.</li><li>Spatial join radius for Overture matching: 50 m.</li><li>Coverage filter: 80 percent of a user's visited locations must match.</li><li>max_history_in_prompt: 15 most recent check-ins shown in G3 and G4 prompts.</li><li>ML training pairs: 20,000 (10K positive plus 10K negative). ML test pairs: 1,000 (500 positive plus 500 negative).</li><li>LLM training pairs: 2,000 (used for FT). LLM test pairs: 200 (100 positive plus 100 negative).</li><li>For next-location: 1,000 train users, 200 test users, 20 candidates per query (1 positive plus 19 regional negatives), max_history_in_prompt 15.</li></ul>
+
+<p>NYC Taxi:</p>
+
+<ul><li>Train months: 2024-01 through 2024-09. Test months: 2024-10 through 2024-12.</li><li>Duration filter: 1 to 120 minutes, positive trip distance.</li><li>Excluded zones: 264, 265 (unknown).</li><li>Enrichment match radius around zone centroid: 1,000 m.</li><li>Ranking: 20 candidates per query, same-borough negative strategy, 1,000 train origins, 132 test origins (down from 200 because some origin zones lacked sufficient same-borough negatives).</li><li>Duration: 50,000 train and 1,000 test for ML; 20,000 train and 200 test for Llama (matched in size to Gowalla 20K).</li></ul>
+
+<p>Yelp:</p>
+
+<ul><li>min_user_reviews: 20.</li><li>test_reviews_per_user: 5 (last 5 reviews held out per user).</li><li>test_sample_size: 100 cases.</li><li>max_history_in_prompt: 20.</li></ul>
+
+<h3>6.3 ML Hyperparameters</h3>
+
+<p>LightGBM (used for friendship, next-location, next-dropoff, duration):</p>
+
+<ul><li>Objective: binary_logloss (classification, pointwise ranking) or regression_l2 (duration).</li><li>Number of leaves: 31 (default).</li><li>Learning rate: 0.05.</li><li>Min data in leaf: 20.</li><li>Number of boosting rounds: 500 with early stopping (patience 25) on a held-out 10 percent validation slice of the training set.</li><li>Categorical features: any feature with fewer than 100 unique levels is declared categorical (regions, top-category indices).</li></ul>
+
+<p>MLP:</p>
+
+<ul><li>Architecture: 2 hidden layers, sizes [64, 32], ReLU, dropout 0.3.</li><li>Loss: BCEWithLogits for classification/ranking, MSE for duration.</li><li>Optimizer: Adam, lr=1e-3, weight_decay=1e-4.</li><li>Batch size: 256.</li><li>Epochs: 50 with early stopping (patience 5) on validation loss.</li></ul>
+
+<p>Embedding-augmented baselines (Yelp):</p>
+
+<ul><li>Embedder: OpenAI text-embedding-3-small (1536-d).</li><li>Concatenation: handcrafted features plus embedding vector.</li><li>Same LightGBM/MLP hyperparameters as above.</li></ul>
+
+<h3>6.4 Llama 3.1 8B Fine-tuning</h3>
+
+<ul><li>Base: unsloth/Meta-Llama-3.1-8B-Instruct (full precision base, int4 QLoRA).</li><li>LoRA rank: 16, alpha: 32, dropout: 0 (default unsloth).</li><li>Training set: 20,000 examples per (granularity, tier).</li><li>max_seq_length: 8,192.</li><li>Batch size per device: 2, gradient accumulation: 4 (effective batch 8).</li><li>Optimizer: AdamW, lr=2e-4, cosine schedule, warmup_ratio=0.03.</li><li>Epochs: 3.</li><li>Seed: fixed for reproducibility.</li><li>Inference: greedy decoding, max_new_tokens=64.</li></ul>
+
+<p>Llama zero-shot uses the same base checkpoint without adapters, also greedy.</p>
+
+<p>OpenAI fine-tuning bridging runs:</p>
+
+<ul><li>Models: gpt-4o-mini, gpt-4.1-mini.</li><li>Training set: 200 pairs (enriched tier, balanced).</li><li>Validation: held-out 50 pairs.</li><li>API hyperparameters: defaults (3 epochs, default lr_multiplier).</li></ul>
+
+<h3>6.5 OpenAI Zero-shot and Few-shot Settings</h3>
+
+<ul><li>temperature: 0 (non-reasoning) or default for gpt-5 family with reasoning_effort=medium.</li><li>max_tokens: 64.</li><li>request_timeout: 60s; max_retries: 5; retry_base_delay: 60s.</li><li>2-shot configuration (gpt-5-mini, gpt-5-nano, friendship): 1 positive plus 1 negative example sampled from the train pool.</li><li>Disk cache keyed by SHA-256 of (model, messages, temperature, max_tokens) under results/&lt;dataset&gt;_cache/.</li></ul>
+
+<h3>6.6 Evaluation Metrics</h3>
+
+<ul><li>Friendship: accuracy on a balanced (50/50) test set.</li><li>Next-location, next-dropoff: Acc@1, Acc@5, and Mean Reciprocal Rank (MRR) over 20-candidate sets. MRR for a query q is 1 / rank of the gold candidate; reported as the mean over all queries.</li><li>Trip duration: Mean Absolute Error (MAE) and Root Mean Squared Error (RMSE) in minutes.</li><li>Star rating: MAE, exact accuracy, and within-1 accuracy.</li></ul>
+
+<p>Bootstrap confidence intervals are computed at 1,000 resamples for the headline numbers but reported in the appendix only.</p>
+
+<h3>6.7 Reproducibility</h3>
+
+<p>All experiments are seeded. LightGBM seed 42, MLP seed 42, Llama fine-tuning seed 42, candidate sampling seeded with the user ID. The full pipeline for Gowalla is:</p>
+
+<pre class="codeblock">python scripts/gowalla_preprocess.py
+python scripts/gowalla_enrich_overture.py
+python scripts/gowalla_enrich_preprocess.py
+python scripts/gowalla_handcrafted_train.py
+python scripts/gowalla_latlng_handcrafted_train.py
+python scripts/gowalla_enrich_handcrafted_train.py
+python scripts/gowalla_enrich_experiment.py</pre>
+
+<p>Each script writes a deterministic JSON under results/ (one subdirectory per dataset) with one record per (granularity, tier, model). Metrics are computed downstream from these raw JSON files; nothing is hand-aggregated.</p>
+
+<h2>7. Results</h2>
+
+<h3>7.1 Measure of Success</h3>
+
+<p>The success criteria for this project, by task and model family, are listed below. Ballpark ranges are derived from prior work and from the project's pre-experiment expectations.</p>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>Task</th><th>Metric</th><th>Random</th><th>Reasonable target</th><th>Strong target</th></tr></thead>
+<tbody><tr><td>Gowalla Friendship</td><td>Accuracy</td><td>50%</td><td>75%</td><td>85%</td></tr>
+<tr><td>Gowalla Next-Location</td><td>MRR</td><td>0.10</td><td>0.40</td><td>0.55</td></tr>
+<tr><td>NYC Taxi Next-Dropoff</td><td>MRR</td><td>0.13</td><td>0.55</td><td>0.70</td></tr>
+<tr><td>NYC Taxi Trip Duration</td><td>MAE</td><td>8 min</td><td>5 min</td><td>4 min</td></tr>
+<tr><td>Yelp Star Rating</td><td>MAE</td><td>1.5</td><td>1.0</td><td>0.85</td></tr>
+<tr><td>Yelp Next-Business Ranking</td><td>MRR</td><td>0.13</td><td>0.50</td><td>0.75</td></tr></tbody>
+</table></div>
+
+<p>A secondary success criterion is whether the enrichment crossover effect is detectable in a clean, reproducible way. Concretely, success means: at least one (model, task) configuration shows a statistically meaningful sign reversal of the enriched minus non-enriched gap as granularity increases from G0 to G4.</p>
+
+<h3>7.2 Context: Granularity on Natively Rich Data (Yelp)</h3>
+
+<p>Before studying enrichment on sparse data, it is important to establish that context depth matters even when data is already semantically rich, and that no single model family dominates across all settings.</p>
+
+<h4>7.2.1 Yelp Star Rating Prediction</h4>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>G</th><th>gpt-4o-mini</th><th>gpt-4o</th><th>gpt-4.1</th><th>gpt-5-mini</th><th>gpt-5-nano</th><th>LightGBM</th><th>MLP</th></tr></thead>
+<tbody><tr><td>G0</td><td>1.07</td><td>1.16</td><td>1.01</td><td>1.09</td><td>1.27</td><td>1.14</td><td>1.12</td></tr>
+<tr><td>G1</td><td>1.13</td><td>1.07</td><td>1.06</td><td>1.07</td><td>1.14</td><td>1.02</td><td>0.98</td></tr>
+<tr><td>G2</td><td>0.94</td><td>0.86</td><td>0.80</td><td>0.85</td><td>0.99</td><td>0.97</td><td>1.00</td></tr>
+<tr><td>G3</td><td>0.97</td><td>0.84</td><td>0.86</td><td>0.81</td><td>0.88</td><td>0.95</td><td>0.97</td></tr>
+<tr><td>G4</td><td>1.02</td><td>0.87</td><td>0.85</td><td>0.81</td><td>0.87</td><td>0.96</td><td>0.93</td></tr></tbody>
+</table></div>
+
+<p>LLMs outperform ML at moderate-to-high granularity: gpt-4.1 achieves MAE = 0.80 at G2, while gpt-5-mini reaches MAE = 0.81 at G3 and G4. ML peaks at MAE = 0.93 (MLP at G4). At G0 to G1, ML is competitive; embedding-augmented LightGBM achieves MAE = 0.976 at G0.</p>
+
+<h4>7.2.2 Yelp Next-Business Ranking</h4>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>G</th><th>gpt-4o-mini</th><th>gpt-4o</th><th>gpt-4.1</th><th>gpt-5-mini</th><th>gpt-5-nano</th><th>LightGBM</th><th>MLP</th></tr></thead>
+<tbody><tr><td>G0</td><td>.230</td><td>.277</td><td>.326</td><td>.238</td><td>.232</td><td>.269</td><td>.172</td></tr>
+<tr><td>G1</td><td>.336</td><td>.451</td><td>.451</td><td>.332</td><td>.390</td><td>.680</td><td>.683</td></tr>
+<tr><td>G2</td><td>.310</td><td>.414</td><td>.407</td><td>.444</td><td>.373</td><td>.723</td><td>.740</td></tr>
+<tr><td>G3</td><td>.340</td><td>.434</td><td>.445</td><td>.450</td><td>.396</td><td>.725</td><td>.677</td></tr>
+<tr><td>G4</td><td>.597</td><td>.810</td><td>.849</td><td>.884</td><td>.809</td><td>.730</td><td>.802</td></tr></tbody>
+</table></div>
+
+<p>The pattern reverses at intermediate granularity: handcrafted ML models dominate G1 to G3 (MLP MRR = 0.740 at G2 vs. best LLM 0.444). At G0, embedding-augmented LightGBM (MRR 0.608) and KAR-LightGBM (MRR 0.640) nearly double the best zero-shot LLM (0.326). Only at G4 do LLMs surge ahead: gpt-5-mini reaches MRR 0.884, surpassing the best ML model (MLP 0.802). The dramatic G4 jump for LLMs is driven by a 2 to 3 times improvement when temporal context enables reasoning about visit recency.</p>
+
+<h4>7.2.3 Yelp Embedding and KAR Augmentation</h4>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>G</th><th>LGB Emb (rating MAE)</th><th>MLP Emb (rating MAE)</th><th>LGB KAR (rating MAE)</th><th>MLP KAR (rating MAE)</th><th>LGB Emb (rank MRR)</th><th>MLP Emb (rank MRR)</th><th>LGB KAR (rank MRR)</th><th>MLP KAR (rank MRR)</th></tr></thead>
+<tbody><tr><td>G0</td><td>0.98</td><td>1.05</td><td>1.09</td><td>1.18</td><td>.608</td><td>.358</td><td>.640</td><td>.332</td></tr>
+<tr><td>G1</td><td>1.00</td><td>1.10</td><td>1.06</td><td>1.06</td><td>.672</td><td>.490</td><td>.612</td><td>.520</td></tr>
+<tr><td>G2</td><td>0.98</td><td>1.07</td><td>1.05</td><td>1.21</td><td>.652</td><td>.463</td><td>.605</td><td>.277</td></tr>
+<tr><td>G3</td><td>1.02</td><td>1.07</td><td>1.11</td><td>1.08</td><td>.672</td><td>.466</td><td>.577</td><td>.468</td></tr>
+<tr><td>G4</td><td>1.01</td><td>1.04</td><td>1.04</td><td>1.03</td><td>.724</td><td>.775</td><td>.772</td><td>.762</td></tr></tbody>
+</table></div>
+
+<p>These results demonstrate that context depth substantially affects performance and that the relative advantage of LLMs versus ML depends on both granularity and task type. They also motivate the central question: can external knowledge enrichment replicate granularity-driven gains on sparse check-in data?</p>
+
+<h3>7.3 Gowalla Friendship Prediction</h3>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>G</th><th>LGB lat</th><th>LGB ven</th><th>LGB enr</th><th>Llama FT lat</th><th>Llama FT ven</th><th>Llama FT enr</th><th>Llama ZS lat</th><th>Llama ZS ven</th><th>Llama ZS enr</th></tr></thead>
+<tbody><tr><td>G0</td><td>65.5</td><td>65.5</td><td>65.5</td><td>65.0</td><td>68.0</td><td>67.0</td><td>50.0</td><td>50.0</td><td>50.0</td></tr>
+<tr><td>G1</td><td>75.7</td><td>75.7</td><td>78.7</td><td>69.5</td><td>70.5</td><td>85.5</td><td>66.0</td><td>56.0</td><td>56.0</td></tr>
+<tr><td>G2</td><td>84.0</td><td>82.9</td><td>84.7</td><td>87.0</td><td>88.5</td><td>87.0</td><td>50.5</td><td>50.0</td><td>50.0</td></tr>
+<tr><td>G3</td><td>83.3</td><td>84.1</td><td>84.2</td><td>84.5</td><td>90.0</td><td>86.5</td><td>54.0</td><td>50.5</td><td>50.5</td></tr>
+<tr><td>G4</td><td>84.3</td><td>84.3</td><td>84.2</td><td>87.5</td><td>90.0</td><td>87.5</td><td>55.0</td><td>50.5</td><td>50.5</td></tr></tbody>
+</table></div>
+
+<p>ML results. LightGBM shows a clear enrichment benefit at G1 (plus 3.0 percentage points over venue_id) and G2 (plus 1.8 pp). By G3 and G4, the tiers converge: enrichment neither helps nor hurts. Performance improves monotonically from G0 (65.5 percent) to G4 (84.3 percent), with the largest jump at G1 to G2 where location overlap and co-visitation features are introduced. The latlng tier (approximate geo-cell matching) is surprisingly competitive, matching venue_id at G4 (84.3 percent), suggesting that for social prediction, approximate location matching may suffice.</p>
+
+<p>Llama fine-tuned results. The crossover is dramatically amplified under fine-tuning. At G1, enriched Llama (85.5 percent) outperforms venue_id Llama (70.5 percent) by 15 percentage points, the largest enrichment effect observed in any setting. The crossover occurs at G2: venue_id overtakes enriched and the gap widens, reaching 90.0 percent versus 87.5 percent at G3 and G4. This 90.0 percent accuracy is the highest result across all models and configurations, surpassing the best ML model (enriched plus embedding LightGBM at 87.6 percent).</p>
+
+<p>Zero-shot results. Five OpenAI models spanning reasoning (gpt-4o, gpt-4.1), non-reasoning (gpt-4o-mini), and smaller variants (gpt-5-mini, gpt-5-nano) achieve 50 to 55 percent at G0 and G2 to G4, with a narrow window at G1 where gpt-5-nano reaches 63.0 percent on venue_id. Llama 3.1 8B Instruct follows the same pattern across all three tiers: latlng peaks at 66.0 percent at G1 (the best ZS result), while venue_id and enriched produce identical accuracies at every granularity level (50.0, 56.0, 50.0, 50.5, 50.5 for G0 to G4). The enrichment delta for Llama ZS is exactly zero at all levels: without training, the model cannot distinguish enriched prompts from raw venue-ID prompts. This stands in stark contrast to fine-tuned Llama, where enrichment produces a plus 15 pp swing at G1 and a minus 2.5 pp swing at G4, confirming that the crossover effect is training-dependent.</p>
+
+<p>OpenAI Fine-Tuned and Few-Shot (200 training pairs, enriched tier).</p>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>G</th><th>gpt-4o-mini FT</th><th>gpt-4.1-mini FT</th><th>gpt-5-mini few-shot</th><th>gpt-5-nano few-shot</th></tr></thead>
+<tbody><tr><td>G0</td><td>50.5</td><td>49.5</td><td>51.5</td><td>52.0</td></tr>
+<tr><td>G1</td><td>72.5</td><td>73.0</td><td>50.0</td><td>65.0</td></tr>
+<tr><td>G2</td><td>74.0</td><td>76.5</td><td>66.0</td><td>58.5</td></tr>
+<tr><td>G3</td><td>75.5</td><td>78.0</td><td>70.0</td><td>62.5</td></tr>
+<tr><td>G4</td><td>77.5</td><td>78.0</td><td>64.5</td><td>62.5</td></tr></tbody>
+</table></div>
+
+<p>OpenAI fine-tuning on a small bridging set (200 pairs) recovers monotonic improvement up to 78.0 percent at G4 but does not reach the 90.0 percent achieved by Llama FT on 20,000 pairs.</p>
+
+<p>Zero-shot OpenAI results across all five models and both tiers.</p>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>G</th><th>4o-mini ven</th><th>4o ven</th><th>4.1 ven</th><th>5-mini ven</th><th>5-nano ven</th><th>4o-mini enr</th><th>4o enr</th><th>4.1 enr</th><th>5-mini enr</th><th>5-nano enr</th></tr></thead>
+<tbody><tr><td>G0</td><td>50.0</td><td>50.0</td><td>50.0</td><td>50.0</td><td>50.0</td><td>50.0</td><td>50.0</td><td>50.0</td><td>50.0</td><td>49.5</td></tr>
+<tr><td>G1</td><td>60.0</td><td>61.5</td><td>50.5</td><td>60.0</td><td>63.0</td><td>53.0</td><td>55.0</td><td>51.0</td><td>55.5</td><td>54.0</td></tr>
+<tr><td>G2</td><td>50.5</td><td>50.5</td><td>50.5</td><td>50.5</td><td>51.0</td><td>50.5</td><td>51.0</td><td>50.5</td><td>50.5</td><td>52.0</td></tr>
+<tr><td>G3</td><td>52.5</td><td>54.5</td><td>51.0</td><td>53.0</td><td>52.5</td><td>51.0</td><td>52.5</td><td>51.0</td><td>53.0</td><td>52.5</td></tr>
+<tr><td>G4</td><td>52.5</td><td>54.0</td><td>51.5</td><td>52.0</td><td>52.5</td><td>51.5</td><td>52.0</td><td>51.5</td><td>52.0</td><td>54.0</td></tr></tbody>
+</table></div>
+
+<p>Hard negatives (same-region non-friend pairs).</p>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>G</th><th>gpt-5-mini</th><th>gpt-5-nano</th></tr></thead>
+<tbody><tr><td>G0</td><td>50.0</td><td>48.5</td></tr>
+<tr><td>G1</td><td>37.5</td><td>45.5</td></tr>
+<tr><td>G2</td><td>50.5</td><td>49.5</td></tr>
+<tr><td>G3</td><td>51.5</td><td>47.5</td></tr>
+<tr><td>G4</td><td>51.5</td><td>48.5</td></tr></tbody>
+</table></div>
+
+<p>At G1, gpt-5-mini drops to 37.5 percent on hard negatives, below random chance, indicating that its geographic reasoning is actively misleading when negatives share the same region.</p>
+
+<p>Embedding-augmented ML on Gowalla friendship (1,000 ML test pairs).</p>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>G</th><th>LGB Embed</th><th>MLP Embed</th></tr></thead>
+<tbody><tr><td>G0</td><td>64.7</td><td>64.9</td></tr>
+<tr><td>G1</td><td>85.5</td><td>78.5</td></tr>
+<tr><td>G2</td><td>87.2</td><td>80.2</td></tr>
+<tr><td>G3</td><td>86.6</td><td>80.4</td></tr>
+<tr><td>G4</td><td>87.6</td><td>81.7</td></tr></tbody>
+</table></div>
+
+<p>Embedding-augmented LightGBM achieves 87.6 percent at G4, the best ML result, surpassing handcrafted features (84.3 percent) by 3.3 pp. However, it is still outperformed by Llama FT on venue_id (90.0 percent).</p>
+
+<h3>7.4 Gowalla Next-Location Prediction</h3>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>G</th><th>LGB lat</th><th>LGB ven</th><th>LGB enr</th><th>Llama FT lat</th><th>Llama FT ven</th><th>Llama FT enr</th><th>Llama ZS lat</th><th>Llama ZS ven</th><th>Llama ZS enr</th></tr></thead>
+<tbody><tr><td>G0</td><td>.463</td><td>.598</td><td>.598</td><td>.189</td><td>.189</td><td>.189</td><td>.189</td><td>.189</td><td>.189</td></tr>
+<tr><td>G1</td><td>.467</td><td>.572</td><td>.581</td><td>.189</td><td>.189</td><td>.244</td><td>.202</td><td>.198</td><td>.265</td></tr>
+<tr><td>G2</td><td>.468</td><td>.547</td><td>.579</td><td>.387</td><td>.396</td><td>.387</td><td>.339</td><td>.358</td><td>.363</td></tr>
+<tr><td>G3</td><td>.453</td><td>.497</td><td>.490</td><td>.383</td><td>.371</td><td>.373</td><td>.380</td><td>.365</td><td>.354</td></tr>
+<tr><td>G4</td><td>.493</td><td>.578</td><td>.523</td><td>.355</td><td>.391</td><td>.339</td><td>.393</td><td>.411</td><td>.373</td></tr></tbody>
+</table></div>
+
+<p>ML results. Next-location prediction exhibits a strikingly different granularity pattern from friendship. The best ML result occurs at G0 (venue_id LightGBM, MRR = 0.598): venue popularity alone is the strongest signal. Additional features at G1 to G3 actually hurt performance (MRR drops to 0.497 at G3), with partial recovery at G4 when temporal features are added. The enrichment crossover is clear: enriched outperforms venue_id at G1 to G2 (MRR plus 0.009 and plus 0.032) but underperforms at G3 to G4 (MRR minus 0.007 and minus 0.055). At G4, the enrichment penalty is substantial (MRR 0.523 versus 0.578).</p>
+
+<p>LLM results. Llama zero-shot shows the same crossover: enriched leads at G1 (MRR 0.265 vs. 0.198) but venue_id leads at G4 (0.411 vs. 0.373). Unlike friendship, fine-tuning provides minimal improvement for next-location prediction (and sometimes hurts). At G4, zero-shot venue_id (0.411) outperforms fine-tuned venue_id (0.391). This suggests that pointwise binary fine-tuning does not teach effective ranking. All Llama results remain well below the best ML (0.598 MRR), indicating that venue popularity, a numerical signal, is better captured by tree-based models than by language models.</p>
+
+<p>MLP fragility. The MLP exhibits some overfitting at high granularity for next-location prediction: venue_id MLP MRR drops from 0.600 at G0 to 0.258 at G4. This stands in contrast to friendship, where MLP performance improves from 64.2 percent to 80.2 percent. The higher feature dimensionality at G4 may be overwhelming the MLP for ranking but not for classification.</p>
+
+<h3>7.5 NYC Taxi: Replication on Structured Spatial Data</h3>
+
+<p>To test whether the enrichment crossover generalizes beyond sparse check-in data, I evaluate two tasks on NYC Taxi trips: next-dropoff zone ranking and trip duration prediction.</p>
+
+<h4>7.5.1 NYC Taxi Combined Headline Results</h4>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>G</th><th>LGB MRR</th><th>FT l/z MRR</th><th>FT enr MRR</th><th>ZS l/z MRR</th><th>ZS enr MRR</th><th>LGB MAE</th><th>FT l/z MAE</th><th>FT enr MAE</th><th>ZS l/z MAE</th><th>ZS enr MAE</th></tr></thead>
+<tbody><tr><td>G0</td><td>.528</td><td>.493</td><td>.539</td><td>.145</td><td>.164</td><td>6.11</td><td>7.64</td><td>7.36</td><td>8.33</td><td>7.91</td></tr>
+<tr><td>G1</td><td>.723</td><td>.557</td><td>.563</td><td>.164</td><td>.164</td><td>5.33</td><td>6.31</td><td>6.04</td><td>8.17</td><td>7.91</td></tr>
+<tr><td>G2</td><td>.708</td><td>.541</td><td>.515</td><td>.164</td><td>.164</td><td>4.65</td><td>5.18</td><td>5.05</td><td>7.93</td><td>6.02</td></tr>
+<tr><td>G3</td><td>.713</td><td>.547</td><td>.540</td><td>.180</td><td>.177</td><td>4.64</td><td>5.23</td><td>5.24</td><td>8.02</td><td>5.90</td></tr>
+<tr><td>G4</td><td>.658</td><td>.514</td><td>.551</td><td>.179</td><td>.171</td><td>3.88</td><td>4.45</td><td>4.56</td><td>8.27</td><td>6.92</td></tr></tbody>
+</table></div>
+
+<p>Llama produces identical reported metrics for latlng and zone_id at every granularity, for both ZS and FT, on both tasks. To save space the latlng and zone_id Llama columns are merged ("l/z"). Among the tested representations, only enrichment (Overture categories such as restaurant, park) shifts the metrics for Llama on NYC Taxi.</p>
+
+<h4>7.5.2 NYC Taxi Next-Dropoff Ranking, Full Results</h4>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>G</th><th>LGB lat</th><th>LGB zon</th><th>LGB enr</th><th>MLP lat</th><th>MLP zon</th><th>MLP enr</th><th>Llama FT lat</th><th>Llama FT zon</th><th>Llama FT enr</th><th>Llama ZS lat</th><th>Llama ZS zon</th><th>Llama ZS enr</th></tr></thead>
+<tbody><tr><td>G0</td><td>.528</td><td>.521</td><td>.521</td><td>.491</td><td>.490</td><td>.490</td><td>.493</td><td>.493</td><td>.539</td><td>.145</td><td>.145</td><td>.164</td></tr>
+<tr><td>G1</td><td>.720</td><td>.723</td><td>.713</td><td>.732</td><td>.731</td><td>.726</td><td>.557</td><td>.557</td><td>.563</td><td>.164</td><td>.164</td><td>.164</td></tr>
+<tr><td>G2</td><td>.708</td><td>.666</td><td>.670</td><td>.675</td><td>.674</td><td>.678</td><td>.541</td><td>.541</td><td>.515</td><td>.164</td><td>.164</td><td>.164</td></tr>
+<tr><td>G3</td><td>.713</td><td>.667</td><td>.662</td><td>.679</td><td>.676</td><td>.685</td><td>.547</td><td>.547</td><td>.540</td><td>.180</td><td>.180</td><td>.177</td></tr>
+<tr><td>G4</td><td>.658</td><td>.663</td><td>.663</td><td>.655</td><td>.661</td><td>.656</td><td>.514</td><td>.514</td><td>.551</td><td>.179</td><td>.179</td><td>.171</td></tr></tbody>
+</table></div>
+
+<h4>7.5.3 NYC Taxi Trip Duration, Full MAE</h4>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>G</th><th>LGB lat</th><th>LGB zon</th><th>LGB enr</th><th>MLP lat</th><th>MLP zon</th><th>MLP enr</th><th>Llama FT lat</th><th>Llama FT zon</th><th>Llama FT enr</th><th>Llama ZS lat</th><th>Llama ZS zon</th><th>Llama ZS enr</th></tr></thead>
+<tbody><tr><td>G0</td><td>6.11</td><td>6.13</td><td>6.13</td><td>6.75</td><td>6.83</td><td>6.83</td><td>7.64</td><td>7.64</td><td>7.36</td><td>8.33</td><td>8.33</td><td>7.91</td></tr>
+<tr><td>G1</td><td>5.35</td><td>5.35</td><td>5.33</td><td>5.44</td><td>5.44</td><td>5.53</td><td>6.31</td><td>6.31</td><td>6.04</td><td>8.17</td><td>8.17</td><td>7.91</td></tr>
+<tr><td>G2</td><td>4.84</td><td>4.68</td><td>4.65</td><td>5.00</td><td>5.13</td><td>5.11</td><td>5.18</td><td>5.18</td><td>5.05</td><td>7.93</td><td>7.93</td><td>6.02</td></tr>
+<tr><td>G3</td><td>4.82</td><td>4.66</td><td>4.64</td><td>5.46</td><td>5.11</td><td>5.14</td><td>5.23</td><td>5.23</td><td>5.24</td><td>8.02</td><td>8.02</td><td>5.90</td></tr>
+<tr><td>G4</td><td>4.13</td><td>3.93</td><td>3.88</td><td>4.95</td><td>4.50</td><td>4.51</td><td>4.45</td><td>4.45</td><td>4.56</td><td>8.27</td><td>8.27</td><td>6.92</td></tr></tbody>
+</table></div>
+
+<h4>7.5.4 NYC Taxi Trip Duration, RMSE</h4>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>G</th><th>LGB lat</th><th>LGB zon</th><th>LGB enr</th><th>Llama FT lat</th><th>Llama FT zon</th><th>Llama FT enr</th><th>Llama ZS lat</th><th>Llama ZS zon</th><th>Llama ZS enr</th></tr></thead>
+<tbody><tr><td>G0</td><td>8.95</td><td>9.01</td><td>9.01</td><td>11.10</td><td>11.10</td><td>10.62</td><td>12.25</td><td>12.25</td><td>12.11</td></tr>
+<tr><td>G1</td><td>8.14</td><td>8.17</td><td>8.16</td><td>9.24</td><td>9.24</td><td>9.03</td><td>12.32</td><td>12.32</td><td>12.34</td></tr>
+<tr><td>G2</td><td>7.65</td><td>7.46</td><td>7.48</td><td>7.90</td><td>7.90</td><td>7.75</td><td>12.08</td><td>12.08</td><td>9.21</td></tr>
+<tr><td>G3</td><td>7.65</td><td>7.47</td><td>7.43</td><td>8.06</td><td>8.06</td><td>7.88</td><td>12.14</td><td>12.14</td><td>9.28</td></tr>
+<tr><td>G4</td><td>6.58</td><td>6.39</td><td>6.32</td><td>7.06</td><td>7.06</td><td>7.19</td><td>12.26</td><td>12.26</td><td>11.05</td></tr></tbody>
+</table></div>
+
+<p>Headline observations on NYC Taxi:</p>
+
+<ul><li>ML dominates ranking; Llama FT is competitive on duration. LightGBM achieves MRR = 0.723 at G1 versus Llama FT's best of 0.563, a gap consistent with Gowalla next-location, confirming that ML's advantage on ranking tasks extends across datasets. For duration prediction, LightGBM (MAE = 3.88 at G4) still leads Llama FT (4.45), but the gap is much narrower; fine-tuning is highly effective for duration, reducing Llama ZS MAE from 8.3 to 4.5.</li><li>Enrichment deltas are small. Unlike Gowalla's pronounced crossover, enrichment effects on NYC Taxi are modest. For ML ranking, the maximum enrichment delta is 0.010 MRR, an order of magnitude smaller than Gowalla's 0.055. For ML duration, enrichment consistently helps but by only 0.02 to 0.05 minutes MAE. The base zone-level features already encode spatial structure (borough membership, zone-pair distances, aggregate flow statistics), so Overture place categories provide marginal additive signal rather than the dominant semantic scaffold they provide on Gowalla's opaque data.</li><li>latlng and zone_id are empirically equivalent for Llama on NYC Taxi. Llama produces identical reported metrics for latlng and zone_id at every granularity, for both ZS and FT, on both tasks. I read this as an empirical tie under the prompts and training setup of this project, not as evidence that the model is incapable of using either modality. Among the tested tiers, only enrichment (Overture categories such as restaurant, park) shifts the numbers. This contrasts with Gowalla, where venue_id and latlng diverge under fine-tuning.</li></ul>
+
+<h3>7.6 The Enrichment Crossover Effect</h3>
+
+<p>The crossover pattern (enrichment helps at low G, hurts at high G) is strong on Gowalla and attenuated on NYC Taxi. Numerically, the enrichment delta (enriched metric minus venue_id/zone_id metric) by setting is:</p>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>Setting</th><th>G0</th><th>G1</th><th>G2</th><th>G3</th><th>G4</th></tr></thead>
+<tbody><tr><td>Gowalla Friendship LGB (Acc pp)</td><td>0.0</td><td>+3.0</td><td>+1.8</td><td>+0.1</td><td>-0.1</td></tr>
+<tr><td>Gowalla Friendship Llama FT (Acc pp)</td><td>-1.0</td><td>+15.0</td><td>-1.5</td><td>-3.5</td><td>-2.5</td></tr>
+<tr><td>Gowalla Friendship Llama ZS (Acc pp)</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td></tr>
+<tr><td>Gowalla Next-Loc ML (MRR x100)</td><td>0.0</td><td>+0.9</td><td>+3.2</td><td>-0.7</td><td>-5.5</td></tr>
+<tr><td>Gowalla Next-Loc Llama ZS (MRR x100)</td><td>0.0</td><td>+6.7</td><td>+0.5</td><td>-1.1</td><td>-3.8</td></tr>
+<tr><td>Gowalla Next-Loc Llama FT (MRR x100)</td><td>0.0</td><td>+5.5</td><td>-0.9</td><td>+0.2</td><td>-5.2</td></tr>
+<tr><td>NYC Ranking ML (MRR x100)</td><td>0.0</td><td>-1.0</td><td>+0.4</td><td>-0.5</td><td>-0.1</td></tr>
+<tr><td>NYC Ranking Llama FT (MRR x100)</td><td>+4.6</td><td>+0.7</td><td>-2.6</td><td>-0.7</td><td>+3.8</td></tr></tbody>
+</table></div>
+
+<p>A summary of where each tier wins across all settings:</p>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>Dataset</th><th>Task</th><th>Model</th><th>G0</th><th>G1</th><th>G2</th><th>G3</th><th>G4</th></tr></thead>
+<tbody><tr><td>Gowalla</td><td>Friendship</td><td>LGB</td><td>tie</td><td>E (+3.0pp)</td><td>E (+1.8pp)</td><td>tie</td><td>tie</td></tr>
+<tr><td>Gowalla</td><td>Friendship</td><td>Llama FT</td><td>tie</td><td>E (+15.0pp)</td><td>V (+1.5pp)</td><td>V (+3.5pp)</td><td>V (+2.5pp)</td></tr>
+<tr><td>Gowalla</td><td>Friendship</td><td>Llama ZS</td><td>tie</td><td>tie</td><td>tie</td><td>tie</td><td>tie</td></tr>
+<tr><td>Gowalla</td><td>Next-Loc</td><td>LGB</td><td>tie</td><td>E (+.009)</td><td>E (+.032)</td><td>V (+.007)</td><td>V (+.055)</td></tr>
+<tr><td>Gowalla</td><td>Next-Loc</td><td>Llama FT</td><td>tie</td><td>E (+.055)</td><td>V (+.009)</td><td>tie</td><td>V (+.052)</td></tr>
+<tr><td>Gowalla</td><td>Next-Loc</td><td>Llama ZS</td><td>tie</td><td>E (+.067)</td><td>tie</td><td>V (+.011)</td><td>V (+.038)</td></tr>
+<tr><td>NYC</td><td>Ranking</td><td>LGB</td><td>tie</td><td>tie</td><td>tie</td><td>tie</td><td>tie</td></tr>
+<tr><td>NYC</td><td>Ranking</td><td>Llama FT</td><td>E (+.046)</td><td>tie</td><td>Z (+.026)</td><td>tie</td><td>E (+.038)</td></tr>
+<tr><td>NYC</td><td>Ranking</td><td>Llama ZS</td><td>E (+.019)</td><td>tie</td><td>tie</td><td>tie</td><td>Z (+.008)</td></tr>
+<tr><td>NYC</td><td>Duration</td><td>LGB</td><td>tie</td><td>tie</td><td>tie</td><td>tie</td><td>tie</td></tr>
+<tr><td>NYC</td><td>Duration</td><td>Llama FT</td><td>E (-0.28)</td><td>E (-0.27)</td><td>E (-0.13)</td><td>tie</td><td>Z (+0.11)</td></tr>
+<tr><td>NYC</td><td>Duration</td><td>Llama ZS</td><td>E (-0.42)</td><td>E (-0.26)</td><td>E (-1.91)</td><td>E (-2.12)</td><td>E (-1.35)</td></tr></tbody>
+</table></div>
+
+<p>E = enriched wins, V/Z = venue_id/zone_id wins, tie = within 0.5 pp (accuracy) or 0.005 (MRR) or 0.05 (MAE). For duration, lower MAE is better, so a negative delta means enrichment helps.</p>
+
+<p>Finding. The enrichment crossover is conditional. On semantically opaque data (Gowalla), enrichment consistently helps at G1 and hurts at G4 across 6 of 6 trained-model settings (3 friendship plus 3 next-loc). On structured spatial data (NYC Taxi), enrichment effects are small (less than 0.01 MRR for ML) and do not form a consistent crossover. The crossover requires enrichment to be a major information contributor at low granularity that then collides with behavioral features at high granularity, a condition met when the base data is opaque but not when it already encodes spatial structure.</p>
+
+<h3>7.7 Why Does the Crossover Happen?</h3>
+
+<p>Five complementary pieces of evidence explain the crossover mechanism.</p>
+
+<h4>7.7.1 Marginal Information Value</h4>
+
+<p>At G0 to G1, the feature space is small (3 to 8 features for ML, or a short prompt for LLMs). Adding 2 to 4 category-based enrichment features at G1 represents a 25 to 50 percent increase in available signal. At G4, the feature space grows to 15 to 25 features; enrichment features constitute less than 15 percent of the total, with diminishing marginal information.</p>
+
+<h4>7.7.2 Feature Redundancy</h4>
+
+<p>Category features become correlated with behavioral features at G2+. For instance, "both users visit restaurants" (a category feature) is highly correlated with "users have co-visited 3 locations" (a behavioral feature). Once co-visitation counts are available, category overlap is redundant and adds dimensionality without proportional signal.</p>
+
+<h4>7.7.3 SHAP Evidence</h4>
+
+<p>I compute SHAP values for LightGBM models trained at G1 and G4 on the enriched tier. At G1, enrichment features (category entropy, top-category overlap, category match) account for 24.3 percent of total mean absolute SHAP, with entropy_a ranking as the third most important feature (12.6 percent share) out of 10 total. At G4, enrichment features' SHAP share drops to 19.1 percent despite comprising 14 of 31 features; the highest-ranked enrichment feature (conc_a) falls to position eight at just 2.9 percent, crowded out by behavioral features (shared_locs at 26.4 percent, norm_distance at 9.1 percent, temporal_cooc at 4.7 percent). Since SHAP importance is relative, part of this shift may reflect the strength of behavioral features added at G2+ rather than enrichment redundancy per se; the ablation below isolates the causal effect.</p>
+
+<figure class="figpaper">
+  <div class="pairgrid">
+    <div><img src="fig/shap_G1.png" alt="Horizontal bar chart of mean absolute SHAP values for the ten G1 features; entropy_a ranks third and enrichment bars are highlighted." loading="lazy"><p class="subcap">G1 (10 features, 4 enrichment)</p></div>
+    <div><img src="fig/shap_G4.png" alt="Horizontal bar chart of mean absolute SHAP values for the thirty-one G4 features; shared_locs dominates and enrichment bars sit far down the ranking." loading="lazy"><p class="subcap">G4 (31 features, 14 enrichment)</p></div>
+  </div>
+  <figcaption>Mean absolute SHAP values for LightGBM on the enriched tier at G1 and G4. At G1, enrichment features (category entropy, overlap) rank among the top contributors. At G4, they are crowded out by behavioral features (shared locations, trajectory distance).</figcaption>
+</figure>
+
+<h4>7.7.4 Ablation Evidence</h4>
+
+<p>Extending GeoLLM's single-point ablation of external knowledge, I retrain LightGBM at each granularity level with enrichment features removed from the enriched tier (effectively reducing it to venue_id). The accuracy change is:</p>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>Granularity</th><th>Accuracy change when enrichment is removed</th></tr></thead>
+<tbody><tr><td>G1</td><td>-3.0 pp (78.7 to 75.7)</td></tr>
+<tr><td>G2</td><td>-1.8 pp</td></tr>
+<tr><td>G3</td><td>+0.1 pp</td></tr>
+<tr><td>G4</td><td>+0.1 pp (84.3 vs. 84.2)</td></tr></tbody>
+</table></div>
+
+<p>The monotonic decline from minus 3.0 to plus 0.1 pp is the cleanest causal evidence for the crossover.</p>
+
+<figure class="figpaper">
+  <img src="fig/ablation.png" alt="Grouped bar chart of accuracy with and without enrichment features at each granularity level: identical at G0, +3.0pp at G1, +1.8pp at G2, +0.1pp at G3, and -0.1pp at G4." loading="lazy">
+</figure>
+
+<h4>7.7.5 Prediction Disagreement Evidence</h4>
+
+<p>When fine-tuned Llama on the enriched tier disagrees with fine-tuned Llama on the venue_id tier, I ask: who is correct? At G1, 40 out of 200 test pairs produce disagreements, and the enriched model is right in 87.5 percent of them (35 of 40). At G4, only 7 disagreements remain, and the venue_id model is right in 85.7 percent (6 of 7). The swing from 87.5 percent to 14.3 percent enriched-correct rate shows the crossover operates at the level of individual predictions, not just aggregate metrics, and that it applies to all model families.</p>
+
+<figure class="figpaper">
+  <img src="fig/disagreement.png" alt="Chart of prediction disagreements between the enriched and venue_id fine-tuned Llama models by granularity, showing the enriched model winning 87.5 percent of disagreements at G1 and losing 85.7 percent at G4." loading="lazy">
+  <figcaption>Prediction disagreement analysis. When fine-tuned Llama models on enriched and venue_id tiers disagree, we check which model is correct. At G1, enrichment wins 87.5% of disagreements; by G4, venue_id wins 85.7%.</figcaption>
+</figure>
+
+<h4>7.7.6 Quantitative Redundancy Evidence</h4>
+
+<p>I compute pairwise correlations between enrichment features and behavioral features at each granularity level. Mean cross-correlation increases from 0.174 at G1 to 0.260 at G2, with the maximum correlation jumping from 0.645 to 0.944. Specifically, uniq_cats_a (number of unique visited categories) correlates at r = 0.944 with uniq_loc_a (number of unique visited locations) from G2 onwards. The number of cross-feature pairs exceeding r = 0.5 rises from 3 at G1 to 28 at G3 to G4, confirming that enrichment features become statistically redundant with behavioral features as context deepens.</p>
+
+<figure class="figpaper">
+  <img src="fig/redundancy.png" alt="Line chart of cross-correlation between enrichment and behavioral features across granularity levels, with the maximum correlation jumping from 0.645 at G1 to 0.944 at G2 and beyond." loading="lazy">
+  <figcaption>Cross-correlation between enrichment and behavioral features across granularity levels. Maximum correlation jumps from 0.645 at G1 to 0.944 at G2+, driven by near-perfect redundancy between <code>uniq_categories</code> and <code>uniq_locations</code>.</figcaption>
+</figure>
+
+<h4>7.7.7 Feature Space Visualization</h4>
+
+<p>UMAP projections of the enriched and venue_id feature spaces at G1 and G4, colored by label, reveal a counterintuitive finding: venue_id features yield higher silhouette scores than enriched features at both G1 (0.093 vs. 0.072) and G4 (0.079 vs. 0.064). Enrichment increases dimensionality (from 6 to 10 at G1, from 17 to 31 at G4) without improving raw class separation. A logistic regression control confirms this: at G1, LightGBM gains plus 3.0 pp from enrichment while logistic regression gains only plus 1.1 pp on the same data.</p>
+
+<figure class="figpaper">
+  <div class="pairgrid">
+    <div><img src="fig/umap_G1.png" alt="Side-by-side UMAP scatter plots of the enriched and venue_id feature spaces at G1, colored by friendship label." loading="lazy"><p class="subcap">G1: enriched vs. venue_id</p></div>
+    <div><img src="fig/umap_G4.png" alt="Side-by-side UMAP scatter plots of the enriched and venue_id feature spaces at G4, colored by friendship label." loading="lazy"><p class="subcap">G4: enriched vs. venue_id</p></div>
+  </div>
+  <figcaption>UMAP projections of feature spaces, colored by label. Venue_id features yield higher silhouette scores at both G1 (0.093 vs. 0.072) and G4 (0.079 vs. 0.064), indicating that enrichment does not improve raw class separation despite increasing dimensionality.</figcaption>
+</figure>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>G</th><th>LightGBM enrichment delta</th><th>LogReg enrichment delta</th><th>Difference</th></tr></thead>
+<tbody><tr><td>G0</td><td>+0.0</td><td>+0.0</td><td>0.0</td></tr>
+<tr><td>G1</td><td>+3.0</td><td>+1.1</td><td>+1.9</td></tr>
+<tr><td>G2</td><td>+1.8</td><td>+0.6</td><td>+1.2</td></tr>
+<tr><td>G3</td><td>+0.1</td><td>+0.0</td><td>+0.1</td></tr>
+<tr><td>G4</td><td>-0.1</td><td>+0.2</td><td>-0.3</td></tr></tbody>
+</table></div>
+
+<p>Roughly two-thirds of the enrichment benefit requires non-linear feature interactions that tree-based models can exploit; behavioral features subsume this advantage at higher granularity.</p>
+
+<figure class="figpaper wide">
+  <img src="fig/umap_progression.png" alt="Five UMAP panels of the enriched-tier feature space from G0 to G4, points colored by friendship label, with silhouette scores 0.065, 0.072, 0.071, 0.068 and 0.064." loading="lazy">
+  <figcaption>UMAP projections of <b>enriched-tier handcrafted features</b> (as used by LightGBM) on <b>Gowalla friendship prediction</b>, from G0 (3 features) to G4 (31 features). Points are colored by friendship label. Despite growing dimensionality, class separation (silhouette score) remains low and peaks at G1 (0.072) when enrichment features first enter, confirming that enrichment provides non-linear signal exploited by tree-based models rather than improved linear separability.</figcaption>
+</figure>
+
+<h3>7.8 When Does the Crossover Occur?</h3>
+
+<p>Opaque base data implies a strong crossover. Gowalla provides only opaque venue IDs and GPS coordinates, with no metadata about what each venue is. At low granularity, Overture Maps categories (restaurant, park) are the only semantic signal available, so they dominate model attention (24.3 percent of SHAP at G1). As behavioral features accumulate at G2+, category features become redundant (r = 0.944 with visit counts), and the model over-attends to now-noisy enrichment, producing the crossover.</p>
+
+<p>Structured base data implies an attenuated crossover. NYC Taxi zones carry inherent spatial structure: each zone belongs to a known borough, zone pairs have stable travel-time distributions, and aggregate flow statistics (popularity, mean duration) encode meaningful spatial relationships. At every granularity level, these zone-level features already provide informative signal. Overture categories add marginal information (the dominant category near zone 237 is restaurant), but this never constitutes the dominant signal, so enrichment neither produces dramatic gains at low G nor dramatic interference at high G. The enrichment delta stays within plus or minus 0.01 MRR for ML across all levels.</p>
+
+<h3>7.9 Empirical Equivalence of Coordinates and Zone IDs (Llama, NYC Taxi)</h3>
+
+<p>NYC Taxi provides a controlled comparison: zone IDs are opaque integers (Zone 237) while coordinates encode continuous geography. Llama 3.1 8B yields identical evaluation metrics for latlng and zone_id at every granularity (zero-shot and fine-tuned, for ranking and duration). I read this as an empirical tie under the prompts and training setup of this project, not as evidence that the model is incapable of using either modality: identical aggregate scores are consistent with equivalent effective signal, limited exploitation under the fine-tuning data scale, or both. The enriched tier, which adds text such as "Zone 237 area: primarily restaurants, cafes, offices," is the only representation tested that consistently changes these metrics relative to the two non-enriched tiers.</p>
+
+<p>This contrasts with Gowalla, where venue_id and latlng diverge under fine-tuning (e.g., venue_id FT achieves 90.0 percent accuracy at G4 vs. latlng's 87.5 percent). Gowalla exposes about 1.3M venue IDs, so fine-tuning on 20K examples can memorize or exploit venue-specific co-occurrence patterns that are harder to recover from coordinates alone. With only 263 taxi zones, analogous ID-specific structure is scarce. The results are consistent with semantically rich hooks (large distinct ID vocabularies or explicit categories) being what differentiates tiers when latlng and opaque zone indices tie empirically.</p>
+
+<h3>7.10 Fine-Tuning and Learning Paradigm Effects</h3>
+
+<p>Fine-tuning interacts with enrichment in two important ways.</p>
+
+<p>Fine-tuning amplifies the crossover. For Gowalla friendship at G1, ML enrichment benefit is plus 3.0 pp, while Llama FT enrichment benefit is plus 15.0 pp, a 5x amplification. Fine-tuning may be teaching the model to attend heavily to the features present in the prompt; at G1 with enrichment, this means category features receive disproportionate attention, boosting performance. At G4, this same attentional focus may become counterproductive when behavioral features should dominate.</p>
+
+<p>Fine-tuning effectiveness is task-dependent. For friendship, fine-tuning is transformative: Llama ZS (latlng, G4) achieves 55.0 percent, while Llama FT (venue_id, G4) achieves 90.0 percent, a plus 35 percentage point improvement. For Gowalla next-location, fine-tuning provides minimal benefit. NYC Taxi reveals an intermediate pattern: fine-tuning is highly effective for both taxi tasks (ranking ZS MRR 0.17 to FT 0.55; duration ZS MAE 8.3 to FT 4.5), suggesting that the failure of next-location FT on Gowalla may more reflect the difficulty of pointwise ranking over more than 1M venues rather than a general limitation of fine-tuning for geospatial tasks.</p>
+
+<p>Zero-shot Llama produces identical accuracies on enriched and venue_id prompts at every granularity level for Gowalla friendship (50.0, 56.0, 50.0, 50.5, 50.5 for G0 to G4), yielding no enrichment delta. Fine-tuning on the same data transforms this flat line into the most extreme crossover I observe: plus 15.0 pp at G1, minus 2.5 pp at G4.</p>
+
+<h3>7.11 Granularity Response Patterns</h3>
+
+<p>Different tasks exhibit distinct granularity response patterns, which prove to be task-type-dependent rather than dataset-dependent.</p>
+
+<ul><li>Classification and regression tasks (friendship, duration). Monotonic improvement G0 to G4. Each layer of context provides additive signal. Friendship LightGBM: 65.5 to 75.7 to 82.9 to 84.1 to 84.3 percent. NYC Taxi duration LightGBM: 6.13 to 5.35 to 4.68 to 4.66 to 3.93 minutes MAE.</li><li>Ranking tasks (next-location, next-dropoff). Non-monotonic. Popularity dominates at G0 to G1; additional features dilute this signal. Both Gowalla and NYC Taxi exhibit this pattern, confirming it reflects a task-type property rather than a dataset artifact.</li><li>Yelp. Rating improves G0 to G2 then plateaus; ranking shows a dramatic G4 jump when temporal context enables visit recency reasoning.</li></ul>
+
+<p>Geospatial features predict beyond explicitly spatial tasks. A notable observation is that the enrichment crossover holds for both explicitly geospatial tasks (next-location, next-dropoff, duration) and a non-geospatial task solved with geospatial data (friendship prediction from mobility traces). Friendship prediction is fundamentally a social inference problem, yet spatial features (co-visitation, trajectory similarity, temporal co-occurrence) are strongly predictive, and enrichment interacts with granularity in the same crossover pattern. This suggests the crossover may be a property of the enrichment-granularity interaction, not of the spatial nature of the prediction target.</p>
+
+<p>Model family observations. Across all four tasks on sparse data, LLMs and feature-based models exhibit complementary strengths: fine-tuned Llama achieves the highest friendship accuracy (90.0 percent vs. feature-based models' 87.6 percent), while LightGBM dominates all three ranking/regression tasks. The LLM advantage appears specifically on social/relational inference, where text-based reasoning about user profiles is naturally expressive.</p>
+
+<h3>7.12 Discussion</h3>
+
+<p>Several non-obvious takeaways for ML practitioners follow from the results:</p>
+
+<p>1. "More context is better" is not a monotone law. On sparse mobility data, adding category enrichment helps when behavioral features are thin and hurts once they are dense. This contradicts a common practice of always concatenating external knowledge. 2. The right time to enrich is when the base data is semantically opaque. NYC Taxi zones already carry borough membership and stable flow statistics; Overture categories only repeat what zone IDs already imply. Gowalla check-ins are pure coordinates and IDs; categories carry the only semantic content. 3. Fine-tuning is not a free amplifier. It amplifies the enrichment effect at G1 in a useful direction but at G4 in a harmful direction. Practitioners should match fine-tuning to the granularity at which they actually deploy. 4. For LLMs, an opaque-integer ID and a coordinate can be empirically indistinguishable in practice. This is task- and model-specific and should not be over-generalized, but it does call into question the assumption that coordinates carry "more" signal than IDs by default. 5. Tree models exploit non-linear interactions of category features that a linear classifier cannot. About two-thirds of the G1 enrichment benefit shows up only when LightGBM is allowed to interact features.</p>
+
+<h3>7.13 Limitations</h3>
+
+<p>Cost-driven model asymmetry. The experimental design uses OpenAI models for zero-shot evaluation and Llama 3.1 8B for fine-tuning. Full-factorial fine-tuning on OpenAI (5 granularities by 3 tiers by multiple models) would require 75 plus API fine-tuning runs, proving prohibitively expensive. This means Yelp experiments are OpenAI zero-shot only, and large-scale fine-tuning experiments use Llama only. Limited OpenAI fine-tuning on two models (gpt-4o-mini, gpt-4.1-mini, enriched tier only, 200 training examples) provides a partial bridge, achieving 78.0 percent accuracy at G4, below both Llama FT (90.0 percent) and best ML (87.6 percent).</p>
+
+<p>Test set sizes. Test sets contain 100 (Yelp), 132 ranking queries and 200 duration cases (NYC Taxi), or 200 pairs (Gowalla). While balanced datasets reduce variance and findings are consistent across tasks and models, bootstrap confidence intervals are computed but not reported in the body.</p>
+
+<p>Single enrichment source. I use Overture Maps place categories exclusively. Other knowledge bases (OpenStreetMap, Google Places) and richer attribute types (business descriptions, user reviews, photos) are not evaluated. The crossover may depend on the type and quality of enrichment.</p>
+
+<p>Point-level matching noise. For Gowalla, each check-in coordinate is matched to its nearest Overture POI within 50m. In dense areas, multiple POIs may fall within this radius, and the matched venue may not be the actual check-in target. Additionally, Gowalla data (2010 to 2011) and Overture Maps (2026) are temporally separated by 15 years, introducing category drift. These effects are partially mitigated by operating at category granularity rather than venue identity, and by the 80 percent coverage filter, but some noise in category assignments is unavoidable.</p>
+
+<p>Spatial scale difference. Gowalla operates at point level (individual venue coordinates), while NYC Taxi operates at zone level (263 TLC zones spanning neighborhoods). The weaker crossover on NYC Taxi may partly reflect this coarser spatial granularity rather than solely the structured nature of zone data. Evaluating both datasets at a common spatial resolution would isolate these factors.</p>
+
+<p>Zone-level enrichment approximation. For NYC Taxi zones, which are polygons rather than points, zone-POI assignment is approximated by finding all Overture POIs within a fixed 1km radius of each zone centroid, rather than performing spatial containment (point-in-polygon) against actual zone boundaries. The 1km radius is commensurate with the median zone equivalent circular radius (about 825m across 263 zones), but 99 zones have equivalent radius greater than 1km and 180 have maximum centroid-to-boundary extent exceeding 1km. Consequently, large zones are under-represented (POIs near the periphery are missed) and small zones experience category leakage from neighbors. While this approximation does not affect the zone_id or latlng tiers (which use no enrichment), the attenuated crossover observed on the enriched tier may partly reflect noisier category assignments rather than a purely domain-driven difference from Gowalla. Replacing the radius-based heuristic with polygon containment (spatial join) may yield a cleaner enrichment signal.</p>
+
+<p>Generalization. The enrichment crossover is demonstrated on two sparse datasets (Gowalla, NYC Taxi) with complementary properties (opaque vs. structured identifiers, point-level vs. zone-level). Replication on additional sparse geospatial datasets would further strengthen the generalizability claim.</p>
+
+<h3>7.14 Conclusion</h3>
+
+<p>This project presents a systematic empirical study of how spatial context granularity and external knowledge enrichment interact for geospatial prediction across two sparse datasets (Gowalla check-ins and NYC Taxi trips), four tasks, and multiple model families.</p>
+
+<p>The central finding, the enrichment crossover effect, shows that enrichment from the Overture Maps knowledge base improves performance when behavioral context is sparse (plus 15 pp for fine-tuned Llama at G1) but degrades it when dense behavioral features are available (minus 2.5 pp at G4). Critically, the crossover is conditional: it is strongest on semantically opaque data (Gowalla), where enrichment provides the only semantic signal, but attenuated on structured spatial data (NYC Taxi), where zone-level features already encode meaningful spatial relationships. The crossover is also training-dependent: zero-shot models produce zero enrichment delta, while fine-tuning both creates and amplifies the effect.</p>
+
+<p>A secondary observation is that, for Llama 3.1 8B on NYC Taxi, coordinate-based and zone-ID-based prompts yield identical evaluation metrics at every granularity tested, whereas the enriched tier differs. I do not interpret this as proof that arbitrary identifiers are universally unusable by LLMs; it shows that in this setting (opaque zone indices, a small zone vocabulary, and the prompting/fine-tuning protocol of this project) neither representation improves measured performance relative to the other until external categories are added.</p>
+
+<p>Future work includes evaluating richer enrichment types (descriptions, reviews), testing adaptive enrichment selectors that automatically choose the optimal representation based on context availability, and exploring listwise LLM ranking approaches for mobility prediction.&nbsp;<span class="tombstone">&#9632;</span></p>
+
+<hr class="rulehr">
+
+<h3>7.15 Sample Prompts</h3>
+
+<p>For reproducibility, this section shows representative prompts at G0 (minimal context) and G4 (full spatiotemporal context) for friendship prediction across all three tiers. Up to 15 recent check-ins are included at G3 and G4; truncated to 2 here for brevity.</p>
+
+<p>System prompt for friendship prediction:</p>
+
+<pre class="codeblock">You are an expert at predicting social relationships from location data.
+Given information about two users' check-in patterns, predict whether
+they are friends. Answer ONLY 'Yes' or 'No'.</pre>
+
+<p>System prompt for next-location prediction:</p>
+
+<pre class="codeblock">You are an expert at predicting location visits from check-in data.
+Given a user's check-in history and a candidate venue, predict whether
+the user will visit this venue next. Answer ONLY 'Yes' or 'No'.</pre>
+
+<p>Friendship prediction, latlng tier, G0:</p>
+
+<pre class="codeblock">User A: 47 total check-ins across 23 unique areas.
+User B: 112 total check-ins across 58 unique areas.
+Are these two users friends? Answer ONLY 'Yes' or 'No'.</pre>
+
+<p>Friendship prediction, latlng tier, G4:</p>
+
+<pre class="codeblock">User A is primarily active in region (34.05, -118.25).
+User A statistics: 47 total check-ins, 23 unique areas, geographic
+spread 12.3 km, active for 89 days.
+User A's recent check-ins:
+  1. [2010-09-15 19:22] at (34.052, -118.243)
+  2. [2010-09-14 12:05] at (34.048, -118.260)
+  ...
+
+User B is primarily active in region (34.06, -118.24).
+User B statistics: 112 total check-ins, 58 unique areas, geographic
+spread 8.7 km, active for 201 days.
+User B's recent check-ins:
+  1. [2010-09-15 08:30] at (34.061, -118.238)
+  ...
+
+Same primary region: Yes
+Distance between centroids: 1.4 km
+Approximate shared areas: 5
+Area overlap (Jaccard): 0.0635
+Approximate temporal co-visits (nearby within 1h): 2
+
+Are these two users friends? Answer ONLY 'Yes' or 'No'.</pre>
+
+<p>Friendship prediction, venue_id tier, G4:</p>
+
+<pre class="codeblock">User A is primarily active in region (34.05, -118.25).
+User A statistics: 47 total check-ins, 31 unique locations,
+geographic spread 12.3 km, active for 89 days.
+User A's recent check-ins:
+  1. [2010-09-15 19:22] Location 94102 at (34.0521, -118.2437)
+  2. [2010-09-14 12:05] Location 77231 at (34.0483, -118.2601)
+  ...
+
+User B is primarily active in region (34.06, -118.24).
+User B statistics: 112 total check-ins, 72 unique locations,
+geographic spread 8.7 km, active for 201 days.
+User B's recent check-ins:
+  1. [2010-09-15 08:30] Location 94102 at (34.0611, -118.2382)
+  ...
+
+Same primary region: Yes
+Distance between centroids: 1.4 km
+Shared locations: 3
+Location Jaccard similarity: 0.0300
+Temporal co-occurrences (same location within 1h): 1
+
+Are these two users friends? Answer ONLY 'Yes' or 'No'.</pre>
+
+<p>Friendship prediction, enriched tier, G4:</p>
+
+<pre class="codeblock">User A is primarily active in region (34.05, -118.25).
+User A frequently visits: Restaurant, Cafe, Bar.
+User A statistics: 47 total check-ins, 31 unique locations,
+12 venue categories, geographic spread 12.3 km, active for 89 days.
+User A's recent check-ins:
+  1. [2010-09-15 19:22] Restaurant at (34.0521, -118.2437)
+  2. [2010-09-14 12:05] Cafe at (34.0483, -118.2601)
+  ...
+
+User B is primarily active in region (34.06, -118.24).
+User B frequently visits: Restaurant, Gym, Park.
+User B statistics: 112 total check-ins, 72 unique locations,
+18 venue categories, geographic spread 8.7 km, active for 201 days.
+User B's recent check-ins:
+  1. [2010-09-15 08:30] Restaurant at (34.0611, -118.2382)
+  ...
+
+Same primary region: Yes
+Distance between centroids: 1.4 km
+Shared locations: 3
+Location Jaccard similarity: 0.0300
+Shared venue categories: 5
+Category similarity (Jaccard): 0.2000
+Same top venue category: Yes
+Temporal co-occurrences (same location within 1h): 1
+
+Are these two users friends? Answer ONLY 'Yes' or 'No'.</pre>
+
+<h3>7.16 Feature Definitions</h3>
+
+<p>The full handcrafted feature set for friendship prediction by granularity level is below. Features marked (E) are available only in the enriched tier; all others are shared across venue_id and enriched. The latlng tier uses the same feature structure but replaces venue-based matching with geo-cell (about 100m) approximations.</p>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>Level</th><th>Feature</th><th>Description</th><th>Example</th></tr></thead>
+<tbody><tr><td>G0</td><td>checkins_a</td><td>Total check-ins for user A</td><td>47</td></tr>
+<tr><td>G0</td><td>checkins_b</td><td>Total check-ins for user B</td><td>112</td></tr>
+<tr><td>G0</td><td>checkins_sum</td><td>checkins_a plus checkins_b</td><td>159</td></tr>
+<tr><td>G1</td><td>same_region</td><td>1 if primary regions match</td><td>1</td></tr>
+<tr><td>G1</td><td>centroid_dist</td><td>Distance between centroids in km</td><td>1.4</td></tr>
+<tr><td>G1</td><td>region_match</td><td>Fraction of overlapping regions</td><td>0.33</td></tr>
+<tr><td>G1</td><td>same_top_cat (E)</td><td>1 if top category matches</td><td>1</td></tr>
+<tr><td>G1</td><td>entropy_a (E)</td><td>H = -sum p_i log p_i over A's categories</td><td>1.82</td></tr>
+<tr><td>G1</td><td>entropy_b (E)</td><td>Category entropy for B</td><td>2.14</td></tr>
+<tr><td>G1</td><td>top3_cat_overlap (E)</td><td>top3_A intersect top3_B over 3</td><td>0.67</td></tr>
+<tr><td>G2</td><td>uniq_loc_a</td><td>Unique locations visited by A</td><td>31</td></tr>
+<tr><td>G2</td><td>uniq_loc_b</td><td>Unique locations visited by B</td><td>72</td></tr>
+<tr><td>G2</td><td>shared_locs</td><td>Size of L_A intersect L_B</td><td>3</td></tr>
+<tr><td>G2</td><td>jaccard_locs</td><td>shared_locs over union_locs (3 over 100)</td><td>0.030</td></tr>
+<tr><td>G2</td><td>shared_cats (E)</td><td>Size of C_A intersect C_B</td><td>5</td></tr>
+<tr><td>G2</td><td>cat_jaccard (E)</td><td>shared_cats over union_cats (5 over 25)</td><td>0.200</td></tr>
+<tr><td>G2</td><td>uniq_cats_a/b (E)</td><td>Unique categories per user</td><td>12, 18</td></tr>
+<tr><td>G2</td><td>cat_js_div (E)</td><td>Jensen-Shannon divergence of category distributions</td><td>0.31</td></tr>
+<tr><td>G2</td><td>concentration_a/b (E)</td><td>Herfindahl index sum p_i squared</td><td>0.12, 0.08</td></tr>
+<tr><td>G3</td><td>geo_spread_a</td><td>Max pairwise distance among A's check-ins, km</td><td>12.3</td></tr>
+<tr><td>G3</td><td>geo_spread_b</td><td>Same for B</td><td>8.7</td></tr>
+<tr><td>G3</td><td>active_days_a/b</td><td>Days between first and last check-in</td><td>89, 201</td></tr>
+<tr><td>G4</td><td>temporal_cooc</td><td>Co-visits within 1h at same location</td><td>1</td></tr>
+<tr><td>G4</td><td>norm_distance</td><td>Centroid dist over mean geo spread</td><td>0.13</td></tr>
+<tr><td>G4</td><td>weighted_jaccard</td><td>Visit-count-weighted Jaccard</td><td>0.024</td></tr>
+<tr><td>G4</td><td>cat_cosine (E)</td><td>Cosine similarity of category frequency vectors</td><td>0.72</td></tr>
+<tr><td>G4</td><td>nonshared_cat_cos (E)</td><td>Cosine excluding shared locations' categories</td><td>0.58</td></tr></tbody>
+</table></div>
+
+<p>The full handcrafted feature set for next-location prediction by granularity level:</p>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>Level</th><th>Feature</th><th>Description</th><th>Example</th></tr></thead>
+<tbody><tr><td>G0</td><td>user_checkins</td><td>Total check-ins</td><td>83</td></tr>
+<tr><td>G0</td><td>user_uniq_locs</td><td>Unique locations (or cells for latlng)</td><td>45</td></tr>
+<tr><td>G0</td><td>cand_popularity</td><td>Training-set visit count for candidate</td><td>12</td></tr>
+<tr><td>G1</td><td>user_region</td><td>Primary geo-region (encoded)</td><td>14</td></tr>
+<tr><td>G1</td><td>dist_to_centroid</td><td>Candidate distance to user centroid, km</td><td>0.8</td></tr>
+<tr><td>G1</td><td>user_top_cat (E)</td><td>User's most frequent category (encoded)</td><td>3</td></tr>
+<tr><td>G1</td><td>cand_cat_known (E)</td><td>1 if candidate's category is in user profile</td><td>1</td></tr>
+<tr><td>G1</td><td>cand_cat_in_profile (E)</td><td>1 if candidate's category is user's top-3</td><td>1</td></tr>
+<tr><td>G2</td><td>geo_spread</td><td>User's geographic spread, km</td><td>5.2</td></tr>
+<tr><td>G2</td><td>active_days</td><td>Days active</td><td>145</td></tr>
+<tr><td>G2</td><td>visited_cand</td><td>1 if user visited this venue before</td><td>1</td></tr>
+<tr><td>G2</td><td>visits_to_cand</td><td>Number of prior visits</td><td>2</td></tr>
+<tr><td>G2</td><td>dist_to_last</td><td>Distance from last check-in to candidate, km</td><td>0.3</td></tr>
+<tr><td>G2</td><td>cat_entropy (E)</td><td>H = -sum p_i log p_i over user's categories</td><td>2.41</td></tr>
+<tr><td>G2</td><td>cand_cat_visits (E)</td><td>User visits to candidate's category</td><td>29</td></tr>
+<tr><td>G2</td><td>cand_cat_ratio (E)</td><td>cand_cat_visits over user_checkins</td><td>0.35</td></tr>
+<tr><td>G3</td><td>min_dist_recent</td><td>Min distance from recent 5 check-ins to candidate</td><td>0.2</td></tr>
+<tr><td>G3</td><td>avg_dist_recent</td><td>Mean distance from recent 5</td><td>1.1</td></tr>
+<tr><td>G3</td><td>last_dist_recent</td><td>Distance from most recent check-in</td><td>0.3</td></tr>
+<tr><td>G3</td><td>recent_same_cat (E)</td><td>Count of recent 5 with same category as candidate</td><td>2</td></tr>
+<tr><td>G4</td><td>mean_visit_hour</td><td>Mean hour of user's check-ins</td><td>14.3</td></tr>
+<tr><td>G4</td><td>std_visit_hour</td><td>Std of visit hours</td><td>4.7</td></tr>
+<tr><td>G4</td><td>avg_hour_at_cand</td><td>Mean hour at candidate (if visited)</td><td>18.5</td></tr></tbody>
+</table></div>
+
+<h3>7.17 Difference Between latlng and venue_id Tiers</h3>
+
+<p>The latlng and venue_id tiers use the same feature set (same number and semantic role of features); only the definition of "place" changes.</p>
+
+<p>Definition of place. In the latlng tier, a place is a geo-cell, defined as the pair (round(lat, 3), round(lon, 3)), giving approximately 100m resolution. In the venue_id tier, a place is the Gowalla location_id (opaque integer per venue). Two distinct POIs within one cell thus count as one place under latlng and two under venue_id.</p>
+
+<p>How place-dependent features are computed in each tier (friendship prediction):</p>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>Feature</th><th>latlng</th><th>venue_id</th></tr></thead>
+<tbody><tr><td>Unique locations per user</td><td>Distinct geo-cells visited</td><td>Distinct location_ids visited</td></tr>
+<tr><td>Shared locations</td><td>Cells in common</td><td>Location IDs in common</td></tr>
+<tr><td>Jaccard</td><td>shared_cells over union_cells</td><td>shared_locs over union_locs</td></tr>
+<tr><td>Temporal co-occurrence</td><td>Same cell and same hour</td><td>Same location_id and same hour</td></tr></tbody>
+</table></div>
+
+<p>Unchanged across tiers: total check-ins, centroid distance, same region, primary region, geo spread, active days.</p>
+
+<p>How place-dependent features are computed in each tier (next-location prediction):</p>
+
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>Feature</th><th>latlng</th><th>venue_id</th></tr></thead>
+<tbody><tr><td>User's unique locations</td><td>Distinct geo-cells in check-ins</td><td>Distinct location_ids</td></tr>
+<tr><td>Candidate</td><td>One geo-cell from candidate (lat, lon)</td><td>candidate_location_id</td></tr>
+<tr><td>Popularity</td><td>Train check-in count in that cell</td><td>Train visit count at that venue_id</td></tr>
+<tr><td>User visited candidate?</td><td>Candidate cell in user's cells</td><td>Any check-in with that location_id</td></tr>
+<tr><td>Visits to candidate</td><td>Count of check-ins in that cell</td><td>Count at that location_id</td></tr>
+<tr><td>G4 avg hour at candidate</td><td>Mean hour of check-ins in that cell</td><td>Mean hour at that venue_id</td></tr></tbody>
+</table></div>
+
+<p>Unchanged across tiers: total check-ins, distance to centroid, primary region, geo spread, active days, dist to last, recent trajectory distances, mean and std visit hour.</p>
+
+</div></article>
+<footer class="colophon"><div class="wrap">
+<h4>8. References</h4>
+
+<p>Primary sources cited in this report (full bibliographic details available on request; the academic paper version maintains a complete refs.bib file):</p>
+
+<ul><li>Cho, E., Myers, S. A., and Leskovec, J. (2011). Friendship and mobility: User movement in location-based social networks. KDD.</li><li>Lian, D., Zhao, C., Xie, X., Sun, G., Chen, E., and Rui, Y. (2014). GeoMF: joint geographical modeling and matrix factorization for point-of-interest recommendation. KDD.</li><li>Liu, Y., Liu, C., Lu, X., Teng, M., Zhu, H., and Xiong, H. (2017). Point-of-interest demand modeling with human mobility patterns. KDD.</li><li>Manvi, R., Khanna, S., Mai, G., Burke, M., Lobell, D., and Ermon, S. (2023). GeoLLM: extracting geospatial knowledge from large language models. ICLR.</li><li>Huang, J., Liu, Z., Yang, X., et al. (2024). UrbanGPT: spatio-temporal large language models. KDD.</li><li>Li, Z., Kim, J., Chiang, Y. Y., and Chen, M. (2022). SpaBERT: a pretrained language model from geographic data for geo-entity representation. EMNLP Findings.</li><li>Overture Maps Foundation (2024). Overture Maps places layer.</li><li>Haklay, M. and Weber, P. (2008). OpenStreetMap: user-generated street maps. IEEE Pervasive Computing.</li><li>Liu, N. F., Lin, K., Hewitt, J., Paranjape, A., Bevilacqua, M., Petroni, F., and Liang, P. (2024). Lost in the middle: how language models use long contexts. TACL.</li><li>Du, Y., et al. (2025). Context length effects degrade LLM performance even with perfect retrieval.</li><li>Chauhan, V., et al. (2026). Less is more: extending user histories does not improve LLM recommendation.</li><li>Ke, G., Meng, Q., Finley, T., Wang, T., Chen, W., Ma, W., Ye, Q., and Liu, T. Y. (2017). LightGBM: a highly efficient gradient boosting decision tree. NeurIPS.</li><li>Dettmers, T., Pagnoni, A., Holtzman, A., and Zettlemoyer, L. (2024). QLoRA: efficient finetuning of quantized LLMs. NeurIPS.</li><li>Lundberg, S. M. and Lee, S. I. (2017). A unified approach to interpreting model predictions. NeurIPS.</li><li>Xi, Y., et al. (2024). Knowledge-augmented reasoning (KAR) for recommendation.</li><li>Scellato, S., Noulas, A., and Mascolo, C. (2011). Exploiting place features in link prediction on location-based social networks. KDD.</li><li>Feng, J., Li, Y., Zhang, C., Sun, F., Meng, F., Guo, A., and Jin, D. (2018). DeepMove: predicting human mobility with attentional recurrent networks. WWW.</li><li>Yang, D., Fankhauser, B., Rosso, P., and Cudre-Mauroux, P. (2020). Location prediction over sparse user mobility traces using RNNs. IJCAI.</li></ul>
+
+<h4>9. Code and Reproduction</h4>
+
+<p>Codebase. The implementation lives at /Users/shantanukumar/Downloads/Final Semester/GeoInsights/ with:</p>
+
+<ul><li>src/llm_client.py for the cached OpenAI/Llama wrapper.</li><li>src/trajectory_builder.py for chronological train/test splits and candidate set construction.</li><li>src/parser.py for LLM ranking output parsing (JSON arrays plus integer fallback).</li><li>src/evaluator.py for Acc@K, MRR, and bootstrap confidence intervals.</li><li>src/gowalla/, src/yelp/, src/nyc_taxi/ for dataset-specific loaders and feature engineering.</li><li>scripts/ for the per-dataset preprocess to enrich to train pipelines.</li><li>gowalla_config.yaml, nyc_taxi_config.yaml, yelp_config.yaml, yelp_ranking_config.yaml for per-dataset settings.</li></ul>
+
+<p>Reproduction. The minimum end-to-end reproduction for Gowalla friendship is:</p>
+
+<pre class="codeblock">pip install -r requirements.txt
+cp .env.example .env</pre>
+
+<p>Then open .env and set OPENAI_API_KEY (required) and HF_TOKEN (required for Llama fine-tuning). Finally:</p>
+
+<pre class="codeblock">python scripts/gowalla_preprocess.py
+python scripts/gowalla_enrich_overture.py
+python scripts/gowalla_enrich_preprocess.py
+python scripts/gowalla_enrich_handcrafted_train.py
+python scripts/gowalla_enrich_experiment.py</pre>
+
+<p>For Llama fine-tuning, the workflow is to scp data to Yale Bouchet (sk3376@bouchet.ycrc.yale.edu), open a tmux plus salloc session on the gpu_devel partition with one GPU and 64 GB memory for 6 hours, module load miniconda and activate the llama_ft environment, module load CUDA/12.1.1, then run the corresponding per-dataset Llama scripts under scripts/ (one for finetune, one for inference).</p>
+
+<p>LLM caches under each results/&lt;dataset&gt;/cache/ directory are SHA-256-keyed and persist across runs, so re-running the experiments only pays for new (model, prompt) pairs. All raw results are written as JSON; metric tables in this report are derived from those JSON files via scripts/aggregate_results.py.</p>
+
+<h4>10. Acknowledgements</h4>
+
+<p>This research was advised by Prof. Timos Antonopoulos at Yale University, with additional methodological discussions in Prof. Rex Ying's Graph and Geometric Learning Lab. The course final project frame and grading reside with Prof. Alex Wong (CPSC 381/581, Spring 2026). HPC compute was provided by Yale Bouchet (Center for Research Computing). Data sources include SNAP (Gowalla), the NYC Taxi and Limousine Commission, Yelp Open Dataset, and the Overture Maps Foundation. Any errors or shortcomings remain solely my own.</p>
+</div></footer>
+<script>(function(){const root=document.documentElement,KEY="naksha-theme";const btn=document.getElementById("themeToggle");if(btn)btn.addEventListener("click",()=>{const t=root.dataset.theme==="dark"?"light":"dark";try{localStorage.setItem(KEY,t);}catch(e){}root.dataset.theme=t;});})();</script>
+</body></html>
